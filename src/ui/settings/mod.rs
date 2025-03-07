@@ -11,6 +11,8 @@ use crate::{
 pub struct SettingsWindow {
     pub is_open: bool,
     pub is_game_editor_open: bool,
+    pub additional_should_toggle: bool,
+    pub additional_collapsing_is_open: bool,
 
     pub editor_selected_game: usize,
     pub editor_renaming: bool,
@@ -107,26 +109,46 @@ pub fn build_viewport(
         });
 
         ui.add_space(10.);
-        let frame = egui::Frame::none()
-            .fill(ui.style().visuals.window_fill)
-            .show(ui, |ui| {
-                ui.horizontal(|ui| {
-                    draw_collapse_menu(ui, game);
-                    ui.with_layout(egui::Layout::right_to_left(egui::Align::Min), |ui| {
-                        if ui.button("Auto Scan").clicked() {
-                            // обработка нажатия
-                        }
-                    });
-                });
-            });
+        let header_collapsing_id = ui.make_persistent_id("collapsing_header_toggle");
+        let mut state = egui::collapsing_header::CollapsingState::load_with_default_open(ui.ctx(), header_collapsing_id, false);
+        
+        if window_state.additional_should_toggle {
+            state.toggle(ui);
+            window_state.additional_collapsing_is_open = state.is_open();
+            window_state.additional_should_toggle = false;
+        }
+        
+        // Toggle and display the additional settings section via a collapsible header.
+        state.show_header(ui, |ui| {
+            let response = ui.label("Advanced Compiler Settings");
+            if ui.button("Auto Scan").clicked() {
+                if !window_state.additional_collapsing_is_open {
+                    window_state.additional_should_toggle = true;
+                    // ! TODO
+                }
+            }
+            
+            let id = ui.make_persistent_id("collapsing_header_interact");
+            if ui
+                .interact(response.rect, id, egui::Sense::click())
+                .clicked()
+            {
+                window_state.additional_should_toggle = true;
+            }
+
+        })
+        .body(|ui| {
+            draw_collapse_menu(ui, game);
+        });
     });
 
     // Tell parent viewport that we should not show next frame:
-    if ctx.input(|i| i.viewport().close_requested()) {
+    if ctx.input(|i: &egui::InputState| i.viewport().close_requested()) {
         window_state.is_open = false;
         window_state.is_game_editor_open = false;
     }
 }
+
 
 fn draw_dir_field<F>(ui: &mut egui::Ui, label: &str, dir: &mut String, action: F)
 where
@@ -141,54 +163,54 @@ where
     });
 }
 
+
 fn draw_collapse_menu(ui: &mut egui::Ui, game: &mut GameConfiguration) {
-    ui.collapsing("Additional Cum", |ui| {
-        egui::ScrollArea::both().show(ui, |ui| {
-            draw_dir_field(ui, "Game Dir:", &mut game.bin_dir, |dir| {
-                if let Some(path) = FileDialog::new().pick_folder() {
-                    *dir = path.display().to_string();
-                }
-            });
+    egui::ScrollArea::vertical().show(ui, |ui| {
+        draw_dir_field(ui, "Game Dir:", &mut game.bin_dir, |dir| {
+            if let Some(path) = FileDialog::new().pick_folder() {
+                *dir = path.display().to_string();
+            }
+        });
 
-            draw_dir_field(ui, "Output Dir:", &mut game.output_dir, |dir| {
-                if let Some(path) = FileDialog::new().pick_folder() {
-                    *dir = path.display().to_string();
-                }
-            });
+        draw_dir_field(ui, "Output Dir:", &mut game.output_dir, |dir| {
+            if let Some(path) = FileDialog::new().pick_folder() {
+                *dir = path.display().to_string();
+            }
+        });
 
-            // info hint
-            draw_dir_field(ui, "VBSP:", &mut game.vbsp, |dir| {
-                if let Some(path) = FileDialog::new().pick_folder() {
-                    *dir = path.display().to_string();
-                }
-            });
+        // info hint
+        draw_dir_field(ui, "VBSP:", &mut game.vbsp, |dir| {
+            if let Some(path) = FileDialog::new().pick_file() {
+                *dir = path.display().to_string();
+            }
+        });
 
-            draw_dir_field(ui, "VVIS:", &mut game.vvis, |dir| {
-                if let Some(path) = FileDialog::new().pick_folder() {
-                    *dir = path.display().to_string();
-                }
-            });
+        draw_dir_field(ui, "VVIS:", &mut game.vvis, |dir| {
+            if let Some(path) = FileDialog::new().pick_file() {
+                *dir = path.display().to_string();
+            }
+        });
 
-            draw_dir_field(ui, "VRAD:", &mut game.vrad, |dir| {
-                if let Some(path) = FileDialog::new().pick_folder() {
-                    *dir = path.display().to_string();
-                }
-            });
+        draw_dir_field(ui, "VRAD:", &mut game.vrad, |dir| {
+            if let Some(path) = FileDialog::new().pick_file() {
+                *dir = path.display().to_string();
+            }
+        });
 
-            draw_dir_field(ui, "BSPZip:", &mut game.bspzip, |dir| {
-                if let Some(path) = FileDialog::new().pick_folder() {
-                    *dir = path.display().to_string();
-                }
-            });
+        draw_dir_field(ui, "BSPZip:", &mut game.bspzip, |dir| {
+            if let Some(path) = FileDialog::new().pick_file() {
+                *dir = path.display().to_string();
+            }
+        });
 
-            draw_dir_field(ui, "VPK:", &mut game.vpk, |dir| {
-                if let Some(path) = FileDialog::new().pick_folder() {
-                    *dir = path.display().to_string();
-                }
-            });
+        draw_dir_field(ui, "VPK:", &mut game.vpk, |dir| {
+            if let Some(path) = FileDialog::new().pick_file() {
+                *dir = path.display().to_string();
+            }
         });
     });
 }
+
 
 fn build_config_editor(ctx: &Context, settings: &mut Settings, window_state: &mut SettingsWindow) {
     CentralPanel::default().show(ctx, |ui| {
