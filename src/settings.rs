@@ -1,7 +1,6 @@
 use std::path::PathBuf;
 
-use serde::{Deserialize, Serialize};
-
+use serde::{de, Deserialize, Serialize};
 
 #[derive(Default, Serialize, Deserialize)]
 pub struct Map {
@@ -14,7 +13,7 @@ pub struct Map {
 #[derive(Default, Clone, Serialize, Deserialize)]
 pub struct CompilerApp {
     pub name: String,
-    pub path: PathBuf, 
+    pub path: PathBuf,
     pub activated: bool,
     pub parameters: Vec<String>,
 }
@@ -33,34 +32,43 @@ impl CompilerApp {
 #[derive(Default, Serialize, Deserialize)]
 pub struct Preset {
     pub name: String,
-    pub apps: Vec<CompilerApp>, 
+    pub apps: Vec<CompilerApp>,
 }
 
 impl Preset {
     pub fn new(name: &str, apps: Vec<CompilerApp>) -> Self {
-        Self { 
-            name: name.to_string(), 
-            apps 
-        }
-    }
-}
-
-#[derive(Default, Serialize, Deserialize)]
-pub struct GameConfiguration {
-    pub name: String,
-    pub game_dir: PathBuf,
-    pub bin_dir: PathBuf,
-}
-
-impl GameConfiguration {
-    pub fn new(name: &str, game_dir: &str, bin_dir: &str) -> Self {
         Self {
             name: name.to_string(),
-            game_dir: PathBuf::from(game_dir),
-            bin_dir: PathBuf::from(bin_dir),
+            apps,
         }
     }
 }
+
+#[derive(Default, Serialize, Deserialize, Clone)]
+pub struct GameConfiguration {
+    pub name: String,
+    pub game_dir: String,
+    pub bin_dir: String,
+    pub output_dir: String,
+    // pub app_id: String,
+    pub vbsp: String,
+    pub vvis: String,
+    pub vrad: String,
+    pub bspzip: String,
+    pub vpk: String,
+}
+
+// impl GameConfiguration {
+//     pub fn new(name: &str, game_dir: &str, bin_dir: &str, output_dir: &str) -> Self {
+//         Self {
+//             name: name.to_string(),
+//             game_dir: game_dir.to_string(),
+//             bin_dir: bin_dir.to_string(),
+//             output_dir: output_dir.to_string(),
+//             ..Default::default()
+//         }
+//     }
+// }
 
 #[derive(Serialize, Deserialize)]
 pub struct Settings {
@@ -68,7 +76,7 @@ pub struct Settings {
     pub games: Vec<GameConfiguration>,
     pub current_preset_index: usize,
     pub current_game_index: usize,
-    // pub theme: Theme
+    pub theme: super::ui::themes::Themes,
 }
 
 // impl Settings {
@@ -159,14 +167,13 @@ impl Default for Settings {
 
         Self {
             compile_presets: vec![fast_hdr_preset, fast_preset, full_preset],
-            games: Vec::new(),
+            games: vec![],
             current_preset_index: 0,
             current_game_index: 0,
+            theme: super::ui::themes::Themes::DefaultDark,
         }
     }
 }
-
-
 
 impl Settings {
     pub fn add_preset(&mut self, preset: Preset) {
@@ -184,9 +191,12 @@ impl Settings {
     pub fn current_preset_mut(&mut self) -> Option<&mut Preset> {
         self.compile_presets.get_mut(self.current_preset_index)
     }
-    
+
     pub fn current_game(&self) -> Option<&GameConfiguration> {
         self.games.get(self.current_game_index)
     }
-}
 
+    pub fn current_game_mut(&mut self) -> Option<&mut GameConfiguration> {
+        self.games.get_mut(self.current_game_index)
+    }
+}

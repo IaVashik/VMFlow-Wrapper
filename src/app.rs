@@ -1,7 +1,8 @@
-use std::path::PathBuf;
 use crate::settings::{Map, Settings};
 use crate::ui;
-use serde::{Serialize, Deserialize};
+use eframe::App;
+use serde::{Deserialize, Serialize};
+use std::path::PathBuf;
 
 // Error scan and info about them
 // LUA plugins?
@@ -15,12 +16,13 @@ pub struct CompileError {
 }
 
 #[derive(Default)]
-pub struct HammerTimeGui { 
-    pub settings: Settings, 
-    pub maps: Vec<Map>, 
+pub struct HammerTimeGui {
+    pub settings: Settings,
+    pub maps: Vec<Map>,
 
-    pub open_settings: bool,
-    
+    // additionals windows
+    pub settings_window: ui::settings::SettingsWindow,
+
     pub paths: Vec<PathBuf>,
     pub processing: bool,
     pub warnings: CompileError,
@@ -29,7 +31,6 @@ pub struct HammerTimeGui {
     #[cfg(debug_assertions)]
     pub debug_hover: bool,
 }
-
 
 impl eframe::App for HammerTimeGui {
     fn update(&mut self, ctx: &eframe::egui::Context, frame: &mut eframe::Frame) {

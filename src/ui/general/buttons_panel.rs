@@ -16,8 +16,8 @@ fn build_left_ui(ui: &mut egui::Ui, app: &mut App) {
         // ui.label(app.process_status.to_string())
         //     .on_hover_cursor(egui::CursorIcon::Wait);
         return;
-    } 
-    
+    }
+
     ui.with_layout(egui::Layout::left_to_right(egui::Align::Center), |ui| {
         if ui.button_sized("Add", 12.0).clicked() {
             let dialog = FileDialog::new()
@@ -31,7 +31,6 @@ fn build_left_ui(ui: &mut egui::Ui, app: &mut App) {
             // app.clear_maps();
         }
     });
-
 }
 
 fn build_right_ui(ui: &mut egui::Ui, app: &mut App) {
@@ -41,9 +40,7 @@ fn build_right_ui(ui: &mut egui::Ui, app: &mut App) {
             ui.add_enabled(false, button);
             ui.add(egui::widgets::Spinner::new())
                 .on_hover_cursor(egui::CursorIcon::Progress);
-        }
-
-        else if ui.button("\tBegin Compile!\t").clicked() {
+        } else if ui.button("\tBegin Compile!\t").clicked() {
             app.processing = true;
         }
     });
