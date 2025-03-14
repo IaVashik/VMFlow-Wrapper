@@ -3,17 +3,24 @@ name = "hammer_time"
 version = "0.1.0"
 edition = "2021"
 
+[workspace]
+members = ["compilers_types"]
+
 [dependencies]
+compilers_types = { path = "compilers_types" }
 eframe = "=0.29.0" # 0.31.0 now has a critical bug with TextEdit 
 catppuccin-egui = { version = "5.4.0", default-features = false, features = ["egui29"] }
-egui-theme-switch = "=0.2.1"
 rfd = "0.15"
 serde = { version = "1.0.218", features = ["derive"] }
 log = "0.4.26"
 fern = "0.7"
+include_dir = { version = "0.7.4", features = ["glob"] }
+toml = "0.8.20"
 
 
 [build-dependencies]
+toml = "0.8.20"
+compilers_types = { path = "compilers_types" }
 winresource = "0.1.19"
 
 [lints.rust]

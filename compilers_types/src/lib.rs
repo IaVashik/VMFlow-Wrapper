@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Default, Clone, Serialize, Deserialize)]
-pub struct CompileApp { // CompilerConfig
+pub struct CompilerConfig {
     pub name: String,
     pub is_builtin: bool,
     pub description: String,

@@ -1,4 +1,4 @@
-use compilers_types::CompileApp;
+use compilers_types::CompilerConfig;
 use std::{fs, path::Path};
 
 
@@ -20,7 +20,7 @@ fn main() {
             let contents = fs::read_to_string(&path).expect("Failed to read file");
 
             // Try to parse the TOML file.
-            if let Err(e) = toml::from_str::<CompileApp>(&contents) {
+            if let Err(e) = toml::from_str::<CompilerConfig>(&contents) {
                 panic!("Error parsing TOML file {}: {}", path.display(), e);
             }
         }

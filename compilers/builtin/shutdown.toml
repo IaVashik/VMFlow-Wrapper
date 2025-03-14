@@ -1,0 +1,4 @@
+name = "SHUTDOWN"
+is_builtin = true
+description = "Initiates a controlled and graceful shutdown of the entire system."
+parameters = []
