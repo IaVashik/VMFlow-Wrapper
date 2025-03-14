@@ -1,0 +1,33 @@
+name = "BSPZIP"
+is_builtin = false
+description = "Command line tool for modifying BSP files."
+working_directory = "$binFolder"
+base_arguments = "-game $game "
+
+[[parameters]]
+name = "Pack File List"
+description = "Packs all files in the file list"
+argument = "-addlist"
+value_type = "path"
+
+[[parameters]]
+name = "Delete Cubemaps"
+description = "Deletes all .vtf files in the map"
+argument = "-deletecubemaps"
+value_type = "flag"
+
+[[parameters]]
+name = "Repack"
+description = "Decompresses map if -compress is not passed"
+argument = "-repack"
+value_type = "flag"
+[parameters.constraints]
+compatible_games = [440, 240, 669270] # tf2, css, momentum mod
+
+[[parameters]]
+name = "Compress"
+description = "Compresses map **Warning**: Requires -repack"
+argument = "-compress"
+value_type = "flag"
+[parameters.constraints]
+compatible_games = [440, 240, 669270] # tf2, css, momentum mod

@@ -1,0 +1,4 @@
+name = "COPY"
+is_builtin = true
+description = "Copies the .bsp from the mapsrc folder to maps folder."
+parameters = []
