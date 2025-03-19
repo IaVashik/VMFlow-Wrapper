@@ -13,10 +13,11 @@ pub mod about;
 pub mod compile_info;
 pub mod general;
 pub mod settings;
+pub mod presets;
 
 const VERSION: &str = concat!("Version( ", env!("CARGO_PKG_VERSION"), " )");
 
-fn show_viewport_immediate(
+pub fn show_viewport_immediate(
     ctx: &Context,
     title: &str,
     size: [f32; 2],
@@ -38,22 +39,36 @@ pub fn build_ui(ctx: &Context, app: &mut App) {
     ctx.set_pixels_per_point(1.5);
     // ctx.send_viewport_cmd(egui::ViewportCommand::Title(format!("TODO name. Game: {}", app.settings)));
     app.settings.theme.apply(ctx);
-
+    
     // Process additional/immediate windows
+    let mut is_any_immediate_open = false;
     if app.settings_window.is_open {
         show_viewport_immediate(ctx, "Settings", [270.0, 235.0], |ctx, class| {
             settings::build_viewport(ctx, class, &mut app.settings, &mut app.settings_window)
         });
+        is_any_immediate_open = true;
     }
-
+    if app.presets_window.is_open {
+        show_viewport_immediate(ctx, "Presets", [800.0, 350.0], |ctx, class| {
+            presets::build_viewport(ctx, class, &mut app.settings, &mut app.presets_window)
+        });
+        is_any_immediate_open = true;
+    }
     if app.processing {
-        show_viewport_immediate(ctx, "Compile Process", [300.0, 300.0], |ctx, class| {
+        show_viewport_immediate(ctx, "Compile Process", [600.0, 400.0], |ctx, class| {
             compile_info::build_viewport(ctx, class, app)
         });
+        is_any_immediate_open = true;
     }
 
+
     // Main Panel
-    CentralPanel::default().show(ctx, |ui| general::show(ui, app));
+    CentralPanel::default().show(ctx, |ui| {
+        if is_any_immediate_open {
+            ui.disable();
+        }
+        general::show(ui, app);
+    });
 
     // Handle dropped files.
     ctx.input(|i| {
