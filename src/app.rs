@@ -18,7 +18,7 @@ pub struct CompileError {
 #[derive(Default)]
 pub struct HammerTimeGui {
     pub settings: Settings,
-    pub maps: Vec<Map>,
+    pub maps: Vec<VmfMap>,
 
     // additionals windows
     pub settings_window: ui::settings::SettingsWindow,
