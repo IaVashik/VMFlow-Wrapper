@@ -1,11 +1,10 @@
-use crate::settings::{Map, Settings};
+use crate::settings::{VmfMap, Settings};
 use crate::ui;
 use eframe::App;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
 // Error scan and info about them
-// LUA plugins?
 // Automatic creation of particle manifests for optimization and correct operation of particles on the map
 // Automatic detection and packaging of additional files such as NAV, RADAR, Soundscapes, Detail VBSP, etc.
 
@@ -22,6 +21,7 @@ pub struct HammerTimeGui {
 
     // additionals windows
     pub settings_window: ui::settings::SettingsWindow,
+    pub presets_window: ui::presets::PresetEditorWindow,
 
     pub paths: Vec<PathBuf>,
     pub processing: bool,
