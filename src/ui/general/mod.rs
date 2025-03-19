@@ -8,6 +8,7 @@ use egui::{menu, CentralPanel, Context, Layout, RichText, ScrollArea, Vec2};
 use super::utils::UiExt;
 use rfd::FileDialog;
 
+
 mod buttons_panel;
 
 pub fn show(ui: &mut Ui, app: &mut HammerTimeGui) {
@@ -21,7 +22,7 @@ pub fn show(ui: &mut Ui, app: &mut HammerTimeGui) {
 
     ui.horizontal(|ui| {
         ui.with_layout(Layout::left_to_right(Align::Min), |ui| {
-            ui.label_sized("It's Hammer Time!", 12.0); // CropFactor Team Compile Tool
+            ui.label_sized("We need a really cool name!", 12.0); // CropFactor Team Compile Tool
             ui.add_space(ui.available_width() - 50.0);
             if ui.button_sized("Settings", 10.0).clicked() {
                 app.settings_window.is_open = true;
@@ -52,7 +53,9 @@ pub fn show(ui: &mut Ui, app: &mut HammerTimeGui) {
                     }
                 });
 
-            ui.button_sized("Edit Presets", 10.0);
+            if ui.button_sized("Edit Presets", 10.0).clicked() {
+                app.presets_window.is_open = true;
+            }
         });
     });
 
@@ -67,28 +70,32 @@ pub fn show(ui: &mut Ui, app: &mut HammerTimeGui) {
                 .show(ui, |ui| {
                     // Первая строка: имена приложений.
                     for app in &preset.apps {
-                        ui.label_sized(&app.name, 10.0);
+                        ui.label_sized(app.name(), 10.0);
                     }
                     ui.end_row();
 
                     // Вторая строка: аргументы запуска.
                     for app in &mut preset.apps {
-                        // Объединяем аргументы в одну строку, разделённую пробелом.
-                        ui.vertical(|ui| {
+                        ui.vertical(|ui: &mut Ui| { // TODO!!!
                             ui.checkbox_sized(&mut app.activated, "Enabled", 6.0);
-                            let params;
-                            if (app.activated) {
-                                params = app.parameters.join("\n");
-                            } else {
-                                params = "{ Disabled }".to_string();
+                            let params_text = app.parameters.iter()
+                                .filter_map(|param_override| param_override.to_command_arg())
+                                .collect::<Vec<String>>()
+                                .join("\n");
+                            let mut rich_text = RichText::new(params_text).size(8.);
+                            if !app.activated {
+                                rich_text = rich_text
+                                    .strikethrough()
+                                    .color(egui::Color32::GRAY);
                             }
-                            ui.label_sized(params, 8.0);
+                    
+                            ui.label(rich_text);
                         });
                     }
                     ui.end_row();
                 });
         } else {
-            ui.label("Преcет не выбран или отсутствует");
+            ui.label("First, create a preset.");
         }
     });
 
