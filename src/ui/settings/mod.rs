@@ -3,7 +3,7 @@ pub mod collapse_menu;
 pub mod dir_field;
 pub mod theme_selector;
 
-use eframe::egui::{self, CentralPanel, Context, ViewportClass};
+use eframe::egui::{self, CentralPanel, Context, RichText, ViewportClass};
 use rfd::FileDialog;
 
 use crate::{
@@ -114,6 +114,15 @@ pub fn build_viewport(
         ui.add_space(10.);
 
         collapse_menu::draw_advanced_settings(ui, game, window_state);
+        ui.add_space(10.);
+        let reset_button = ui.add_sized(
+            [ui.available_width(), 10.], 
+            egui::Button::new(RichText::new("Reset Settings (Double Click)").size(10.))
+        );
+        if reset_button.double_clicked() {
+            *settings = Settings::default();
+            window_state.editor_renaming = false;
+        }
     });
 
     // Close the viewport if a close request is detected.
