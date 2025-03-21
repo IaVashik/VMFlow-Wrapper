@@ -1,5 +1,6 @@
 use eframe::egui;
 use rfd::FileDialog;
+use crate::compilers;
 use crate::settings::GameConfiguration;
 use crate::ui::settings::dir_field;
 
@@ -62,52 +63,23 @@ pub fn draw_advanced_settings(ui: &mut egui::Ui, game: &mut GameConfiguration, w
 fn draw_collapse_menu(ui: &mut egui::Ui, game: &mut GameConfiguration) {
     egui::ScrollArea::vertical().show(ui, |ui| {
         // Binary directory field.
-        dir_field::draw_dir_field(ui, "Bin Dir:", &mut game.bin_dir, |dir| {
+        dir_field::draw_dir_field(ui, "Bin Dir", &mut game.bin_dir, |dir| {
             if let Some(path) = FileDialog::new().pick_folder() {
                 *dir = path.display().to_string();
             }
         });
 
-        // Output directory field.
-        dir_field::draw_dir_field(ui, "Output Dir:", &mut game.output_dir, |dir| {
-            if let Some(path) = FileDialog::new().pick_folder() {
-                *dir = path.display().to_string();
+        // Set the path for custom compiler applications.
+        for (idx, compiler) in compilers::COMPILERS.iter().enumerate() {
+            if compiler.is_builtin {
+                continue
             }
-        });
 
-        // VBSP file selection.
-        dir_field::draw_dir_field(ui, "VBSP:", &mut game.vbsp, |dir| {
-            if let Some(path) = FileDialog::new().pick_file() {
-                *dir = path.display().to_string();
-            }
-        });
-
-        // VVIS file selection.
-        dir_field::draw_dir_field(ui, "VVIS:", &mut game.vvis, |dir| {
-            if let Some(path) = FileDialog::new().pick_file() {
-                *dir = path.display().to_string();
-            }
-        });
-
-        // VRAD file selection.
-        dir_field::draw_dir_field(ui, "VRAD:", &mut game.vrad, |dir| {
-            if let Some(path) = FileDialog::new().pick_file() {
-                *dir = path.display().to_string();
-            }
-        });
-
-        // BSPZip file selection.
-        dir_field::draw_dir_field(ui, "BSPZip:", &mut game.bspzip, |dir| {
-            if let Some(path) = FileDialog::new().pick_file() {
-                *dir = path.display().to_string();
-            }
-        });
-
-        // VPK file selection.
-        dir_field::draw_dir_field(ui, "VPK:", &mut game.vpk, |dir| {
-            if let Some(path) = FileDialog::new().pick_file() {
-                *dir = path.display().to_string();
-            }
-        });
+            dir_field::draw_dir_field(ui, &compiler.name, &mut game.custom_apps_paths[idx], |dir| {
+                if let Some(path) = FileDialog::new().pick_file() {
+                    *dir = path.display().to_string();
+                }
+            });
+        }
     });
 }

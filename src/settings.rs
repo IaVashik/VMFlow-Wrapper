@@ -283,20 +283,34 @@ impl ParameterOverride {
 }
 
 
-#[derive(Default, Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone)]
 pub struct GameConfiguration {
     pub name: String,
     pub game_dir: String,
     pub bin_dir: String,
     pub output_dir: String,
     pub steam_app_id: Option<u32>,
+    pub custom_apps_paths: Vec<String>, // index -> compiler config
     
     // TODO!!!!
-    pub vbsp: String,
-    pub vvis: String,
-    pub vrad: String,
-    pub bspzip: String,
-    pub vpk: String,
+    // pub vbsp: String,
+    // pub vvis: String,
+    // pub vrad: String,
+    // pub bspzip: String,
+    // pub vpk: String,
+}
+
+impl Default for GameConfiguration {
+    fn default() -> Self {
+        Self {
+            name: String::new(),
+            game_dir: String::new(),
+            bin_dir: String::new(),
+            output_dir: String::new(),
+            steam_app_id: None,
+            custom_apps_paths: vec![String::new(); compilers::COMPILERS.len()],
+        }
+    }
 }
 
 

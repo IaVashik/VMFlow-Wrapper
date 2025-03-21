@@ -111,6 +111,13 @@ pub fn build_viewport(
             }
         });
 
+        // Draw the output directory field.
+        dir_field::draw_dir_field(ui, "Output Dir:", &mut game.output_dir, |dir| {
+            if let Some(path) = FileDialog::new().pick_folder() {
+                *dir = path.display().to_string();
+            }
+        });
+
         ui.add_space(10.);
 
         collapse_menu::draw_advanced_settings(ui, game, window_state);
