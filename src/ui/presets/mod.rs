@@ -109,7 +109,7 @@ fn draw_preset_editor(
             command_line_preview::draw(ui, &settings, &window_state);
 
             // Disable parameter controls if there are no presets.
-            if !settings.compile_presets.is_empty() {
+            if settings.compile_presets.is_empty() {
                 ui.disable();
             }
             process_buttons::add_parameter_button(ui, window_state);

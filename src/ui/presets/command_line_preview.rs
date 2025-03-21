@@ -21,7 +21,9 @@ pub fn draw(ui: &mut egui::Ui, settings: &Settings, window_state: &PresetEditorW
     
     frame.show(ui, |ui| {
         let width = ui.available_width() - 20. - BUTTON_WIDTH * 2.;
+        let height = ui.available_height() - ui.spacing().item_spacing.y * 4.;
         ui.set_width(width);
+        ui.set_height(height);
         ui.add(egui::Label::new(arg_str).truncate());
     });
 }
