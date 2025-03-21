@@ -5,7 +5,7 @@ use eframe::egui::{
 };
 use egui::{menu, CentralPanel, Context, Layout, RichText, ScrollArea, Vec2};
 // use egui_theme_switch::global_theme_switch;
-use super::utils::UiExt;
+use super::{settings, utils::UiExt};
 use rfd::FileDialog;
 
 
@@ -32,17 +32,15 @@ pub fn show(ui: &mut Ui, app: &mut HammerTimeGui) {
     ui.add_space(15.0);
 
     ui.horizontal(|ui| {
-        ui.with_layout(Layout::left_to_right(Align::Min), |ui| {
-            ui.label_sized("Compile Preset:", 12.0);
-            ui.add_space(ui.available_width() - 170.0);
-
-            let current_preset = app
-                .settings
-                .current_preset()
-                .map(|preset| preset.name.as_str())
-                .unwrap_or_else(|| "Unknown");
+        ui.label_sized("Compile Preset:", 12.0);
+        ui.add_space(ui.available_width() - 178.0);
+        
+        ui.scope(|ui| {
+            ui.set_max_width(120.); // workaround for selected_text
             egui::ComboBox::from_id_salt("Preset")
-                .selected_text(egui::RichText::new(current_preset).size(10.0))
+                .selected_text(egui::RichText::new(app.settings.current_preset_name()).size(10.0))
+                .truncate()
+                .width(120.0)
                 .show_ui(ui, |ui| {
                     for (i, preset) in app.settings.compile_presets.iter().enumerate() {
                         ui.selectable_value(
@@ -52,11 +50,11 @@ pub fn show(ui: &mut Ui, app: &mut HammerTimeGui) {
                         );
                     }
                 });
-
-            if ui.button_sized("Edit Presets", 10.0).clicked() {
-                app.presets_window.is_open = true;
-            }
         });
+        
+        if ui.button_sized("Edit Presets", 8.0).clicked() {
+            app.presets_window.is_open = true;
+        }
     });
 
     egui::Frame::canvas(ui.style()).show(ui, |ui| {
@@ -64,7 +62,7 @@ pub fn show(ui: &mut Ui, app: &mut HammerTimeGui) {
         ui.set_width(ui.available_width());
 
         if let Some(preset) = app.settings.current_preset_mut() {
-            Grid::new("apps_grid")
+            Grid::new("apps_grid") // ! todo
                 .striped(true)
                 .min_col_width(ui.available_width() / preset.apps.len() as f32 - 5.0)
                 .show(ui, |ui| {
