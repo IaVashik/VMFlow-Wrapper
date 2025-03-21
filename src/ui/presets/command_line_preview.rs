@@ -16,7 +16,7 @@ pub fn draw(ui: &mut egui::Ui, settings: &Settings, window_state: &PresetEditorW
     let frame = egui::Frame::default()
         .fill(ui.visuals().extreme_bg_color)
         .stroke(ui.style().visuals.widgets.inactive.bg_stroke)
-        .rounding(ui.style().visuals.widgets.inactive.rounding);
+        .corner_radius(ui.style().visuals.widgets.inactive.corner_radius);
 
     
     frame.show(ui, |ui| {

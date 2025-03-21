@@ -144,8 +144,8 @@ fn draw_preset_editor(
 
 /// Creates a standardized frame for UI panels with consistent styling.
 fn create_panel_frame(ui: &egui::Ui) -> egui::Frame {
-    egui::Frame::none()
+    egui::Frame::new()
         .fill(ui.visuals().faint_bg_color)
-        .rounding(2.0)
-        .inner_margin(Margin::symmetric(4., 0.))
+        .corner_radius(2.0)
+        .inner_margin(Margin::symmetric(4, 0))
 }
