@@ -23,8 +23,8 @@ pub fn build(ctx: &Context, settings: &mut Settings, selected_row: &mut usize) -
                 for (idx, app) in compilers::COMPILERS.iter().enumerate() {
                     body.row(30.0, |mut row| {
                         row.set_selected(*selected_row == idx);
-                        row.col(|ui| { ui.label_size_centered(&app.name, 10.); });
-                        row.col(|ui| { ui.label_sized(&app.description, 10.); });
+                        row.col(|ui| { ui.centered_label_with_size(&app.name, 10.); });
+                        row.col(|ui| { ui.label_with_size(&app.description, 10.); });
 
                         if row.response().clicked() {
                             if *selected_row == idx { // double_clicked

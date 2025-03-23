@@ -21,25 +21,25 @@ pub fn build(ui: &mut egui::Ui, settings: &mut Settings, window_state: &mut supe
             });
             
         // buttons
-        if ui.sized_button("Add", [button_width, 18.]).clicked() {
+        if ui.button_with_dimensions("Add", [button_width, 18.]).clicked() {
             settings.add_preset(Preset::default());
             window_state.is_create_new_open = true;
         }
 
         // Disable subsequent buttons if there are no presets available.
         if settings.compile_presets.is_empty() { ui.disable(); }
-        if ui.sized_button("Edit", [button_width, 18.]).clicked() {
+        if ui.button_with_dimensions("Edit", [button_width, 18.]).clicked() {
             window_state.is_create_new_open = true;
         }
 
-        if ui.sized_button("Remove",  [button_width, 18.]).clicked() {
+        if ui.button_with_dimensions("Remove",  [button_width, 18.]).clicked() {
             settings.compile_presets.remove(settings.current_preset_index);
             if settings.current_preset_index >= settings.compile_presets.len() && !settings.compile_presets.is_empty() {
                 settings.current_preset_index = settings.compile_presets.len() - 1;
             }
         }
 
-        if ui.sized_button("Clone", [button_width, 18.]).clicked() {
+        if ui.button_with_dimensions("Clone", [button_width, 18.]).clicked() {
             if let Some(preset) = settings.current_preset() {
                 let mut cloned_preset = preset.clone();
                 cloned_preset.name += " clone";

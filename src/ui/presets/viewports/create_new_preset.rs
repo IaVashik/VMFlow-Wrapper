@@ -19,8 +19,8 @@ pub fn build(ctx: &Context, settings: &mut Settings) -> bool {
     let mut save_clicked = false; 
 
     CentralPanel::default().show(ctx, |ui| {
-        ui.label_sized("Set preset name:", 10.);
-        ui.singleline_on_screen(&mut preset.name, 0.);
+        ui.label_with_size("Set preset name:", 10.);
+        ui.single_line_text_field(&mut preset.name, 0.);
 
         // Calculate remaining space more descriptively.
         let button_height = 20.0;
@@ -29,7 +29,7 @@ pub fn build(ctx: &Context, settings: &mut Settings) -> bool {
         ui.add_space(remaining_height);
 
         let button_width = ui.available_width() - item_spacing;
-        if ui.sized_button("Save", [button_width, button_height]).clicked() {
+        if ui.button_with_dimensions("Save", [button_width, button_height]).clicked() {
             save_clicked = true;
         }
     });

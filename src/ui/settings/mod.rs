@@ -78,7 +78,7 @@ pub fn build_viewport(
         // and an "Edit" button. The combo box displays the name of the currently selected game configuration.
         // It presents a scrollable list of all available configurations, updating the current game index when an item is selected.
         // Clicking the "Edit" button toggles the game configuration editor open.
-        ui.label_sized("Game Configurations:", 10.);
+        ui.label_with_size("Game Configurations:", 10.);
         ui.horizontal(|ui| {
             egui::ComboBox::from_id_salt("Game")
                 .selected_text(current_name)
@@ -92,7 +92,7 @@ pub fn build_viewport(
                             }
                         });
                 });
-            if ui.sized_button("Edit", [50., 18.]).clicked() {
+            if ui.button_with_dimensions("Edit", [50., 18.]).clicked() {
                 window_state.is_game_editor_open = true;
             }
         });

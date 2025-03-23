@@ -14,9 +14,9 @@ pub fn draw_dir_field<F>(ui: &mut egui::Ui, label: &str, dir: &mut String, actio
 where
     F: FnOnce(&mut String),
 {
-    ui.label_sized(label, 10.0);
+    ui.label_with_size(label, 10.0);
     ui.horizontal(|ui| {
-        ui.singleline_on_screen(dir, 70.0);
+        ui.single_line_text_field(dir, 70.0);
         if ui.button("Browse").clicked() {
             action(dir);
         }

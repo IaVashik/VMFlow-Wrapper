@@ -55,12 +55,12 @@ pub fn build_viewport(
         }
 
         // Draw the preset selector (ComboBox and buttons).
-        ui.label_sized("Preset Configurations:", 10.);
+        ui.label_with_size("Preset Configurations:", 10.);
         preset_selector::build(ui, settings, window_state);
         ui.add_space(5.); // Add some vertical spacing
 
         // Label for the preset editor section.
-        ui.label_sized("TODO:", 10.); 
+        ui.label_with_size("TODO:", 10.); 
 
         // Enable the preset editor UI only if there are any presets.
         ui.add_enabled_ui(!settings.compile_presets.is_empty(), |ui| {

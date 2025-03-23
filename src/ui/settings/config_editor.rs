@@ -13,7 +13,7 @@ use crate::ui::utils::UiExt;
 /// * `window_state` - The mutable state of the settings window.
 pub fn build_config_editor(ctx: &Context, settings: &mut Settings, window_state: &mut super::SettingsWindow) {
     CentralPanel::default().show(ctx, |ui| {
-        ui.label_sized("Configurations:", 10.0);
+        ui.label_with_size("Configurations:", 10.0);
 
         ui.horizontal(|ui| {
             if window_state.editor_renaming {
@@ -38,18 +38,18 @@ pub fn build_config_editor(ctx: &Context, settings: &mut Settings, window_state:
             });
 
             ui.vertical(|ui| {
-                if ui.sized_button("Add", [60., 18.]).clicked() {
+                if ui.button_with_dimensions("Add", [60., 18.]).clicked() {
                     settings.games.push(GameConfiguration::default());
                     window_state.editor_selected_game = settings.games.len() - 1;
                     window_state.editor_renaming = true;
                 }
 
                 let active = settings.games.is_empty();
-                if ui.sized_button_ex("Rename", [60., 18.], active).clicked() {
+                if ui.button_with_dimensions_and_state("Rename", [60., 18.], active).clicked() {
                     window_state.editor_renaming = true;
                 }
 
-                if ui.sized_button_ex("Remove", [60., 18.], active).clicked() {
+                if ui.button_with_dimensions_and_state("Remove", [60., 18.], active).clicked() {
                     settings.games.remove(window_state.editor_selected_game);
                     if settings.games.len() >= settings.current_game_index {
                         settings.current_game_index = settings.games.len().saturating_sub(1);
@@ -57,7 +57,7 @@ pub fn build_config_editor(ctx: &Context, settings: &mut Settings, window_state:
                     }
                 }
 
-                if ui.sized_button_ex("Copy", [60., 18.], active).clicked() {
+                if ui.button_with_dimensions_and_state("Copy", [60., 18.], active).clicked() {
                     let clone = settings.games[window_state.editor_selected_game].clone();
                     settings.games.push(clone);
                 }
@@ -68,11 +68,11 @@ pub fn build_config_editor(ctx: &Context, settings: &mut Settings, window_state:
             return;
         }
 
-        ui.label_sized("Set Name:", 10.);
+        ui.label_with_size("Set Name:", 10.);
         ui.horizontal(|ui| {
             let game_name = &mut settings.games[window_state.editor_selected_game].name;
-            ui.singleline_on_screen(game_name, 78.);
-            if ui.sized_button("Save", [60., 18.]).clicked() && !game_name.is_empty() {
+            ui.single_line_text_field(game_name, 78.);
+            if ui.button_with_dimensions("Save", [60., 18.]).clicked() && !game_name.is_empty() {
                 window_state.editor_renaming = false;
             }
         });

@@ -2,40 +2,54 @@ use eframe::egui::{
     Align, Button, InnerResponse, Layout, Response, RichText, TextBuffer, TextEdit, Ui,
 };
 
+/// Extension trait for Ui that provides additional UI component methods with consistent sizing.
 pub trait UiExt {
-    fn checkbox_sized(
+    /// Creates a checkbox with text of specified size.
+    fn checkbox_with_size(
         &mut self,
         checked: &mut bool,
         text: impl Into<String>,
         size: f32,
     ) -> Response;
-    fn button_sized(&mut self, text: impl Into<String>, size: f32) -> Response;
-    fn label_sized(&mut self, text: impl Into<String>, size: f32) -> Response;
-    fn sized_button(&mut self, text: impl Into<String>, vec: [f32; 2]) -> Response;
-    fn sized_button_ex(
+    
+    /// Creates a button with text of specified size.
+    fn button_with_size(&mut self, text: impl Into<String>, size: f32) -> Response;
+    
+    /// Creates a label with text of specified size.
+    fn label_with_size(&mut self, text: impl Into<String>, size: f32) -> Response;
+    
+    /// Creates a button with specified dimensions.
+    fn button_with_dimensions(&mut self, text: impl Into<String>, dimensions: [f32; 2]) -> Response;
+    
+    /// Creates a button with specified dimensions and optional inactive state.
+    fn button_with_dimensions_and_state(
         &mut self,
         text: impl Into<String>,
-        vec: [f32; 2],
+        dimensions: [f32; 2],
         inactive: bool,
     ) -> Response;
-    fn label_size_centered(
+    
+    /// Creates a centered label with specified size.
+    fn centered_label_with_size(
         &mut self,
         text: impl Into<String>,
         size: f32,
     ) -> InnerResponse<Response>;
-    fn singleline_on_screen(&mut self, text: &mut dyn TextBuffer, spacing_x: f32);
+    
+    /// Creates a single-line text edit field that fills available width minus spacing.
+    fn single_line_text_field(&mut self, text: &mut dyn TextBuffer, spacing_x: f32);
 }
 
 impl UiExt for Ui {
-    fn label_sized(&mut self, text: impl Into<String>, size: f32) -> Response {
+    fn label_with_size(&mut self, text: impl Into<String>, size: f32) -> Response {
         self.label(RichText::new(text.into()).size(size))
     }
 
-    fn button_sized(&mut self, text: impl Into<String>, size: f32) -> Response {
+    fn button_with_size(&mut self, text: impl Into<String>, size: f32) -> Response {
         self.button(RichText::new(text.into()).size(size))
     }
 
-    fn label_size_centered(
+    fn centered_label_with_size(
         &mut self,
         text: impl Into<String>,
         size: f32,
@@ -45,13 +59,13 @@ impl UiExt for Ui {
         })
     }
 
-    fn singleline_on_screen(&mut self, text: &mut dyn TextBuffer, spacing_x: f32) {
+    fn single_line_text_field(&mut self, text: &mut dyn TextBuffer, spacing_x: f32) {
         TextEdit::singleline(text)
             .desired_width(self.available_width() - spacing_x)
             .show(self);
     }
 
-    fn checkbox_sized(
+    fn checkbox_with_size(
         &mut self,
         checked: &mut bool,
         text: impl Into<String>,
@@ -65,19 +79,19 @@ impl UiExt for Ui {
         widget
     }
 
-    fn sized_button(&mut self, text: impl Into<String>, vec: [f32; 2]) -> Response {
-        self.add_sized(vec, Button::new(text.into()))
+    fn button_with_dimensions(&mut self, text: impl Into<String>, dimensions: [f32; 2]) -> Response {
+        self.add_sized(dimensions, Button::new(text.into()))
     }
 
-    fn sized_button_ex(
+    fn button_with_dimensions_and_state(
         &mut self,
         text: impl Into<String>,
-        vec: [f32; 2],
+        dimensions: [f32; 2],
         inactive: bool,
     ) -> Response {
         if inactive {
             self.disable();
         }
-        self.add_sized(vec, Button::new(text.into()))
+        self.add_sized(dimensions, Button::new(text.into()))
     }
 }

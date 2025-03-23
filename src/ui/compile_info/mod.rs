@@ -24,8 +24,8 @@ pub fn build_viewport(ctx: &Context, class: ViewportClass, app: &mut HammerTimeG
                     draw_progress_frame(ui);
                     ui.add_space(14.);
 
-                    ui.label_sized("Total Elapsed Time: TODO", 10.);
-                    ui.sized_button("Abort", [ui.available_width(), 18.]);
+                    ui.label_with_size("Total Elapsed Time: TODO", 10.);
+                    ui.button_with_dimensions("Abort", [ui.available_width(), 18.]);
                 });
         
     });
@@ -51,7 +51,7 @@ fn draw_logs(ui: &mut Ui) {
 }
 
 fn draw_progress_frame(ui: &mut Ui) {
-    ui.label_sized("Progress:", 10.);
+    ui.label_with_size("Progress:", 10.);
     egui::Frame::canvas(ui.style()).show(ui, |ui| {
         ui.set_height(ui.available_height() - 100.);
         ui.set_width(ui.available_width());
