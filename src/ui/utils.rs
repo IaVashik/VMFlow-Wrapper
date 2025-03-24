@@ -1,6 +1,7 @@
 use eframe::egui::{
-    Align, Button, InnerResponse, Layout, Response, RichText, TextBuffer, TextEdit, Ui,
+    self, Align, Button, InnerResponse, Layout, Response, RichText, TextBuffer, TextEdit, Ui
 };
+use egui_extras::{Column, TableBody, TableBuilder};
 
 /// Extension trait for Ui that provides additional UI component methods with consistent sizing.
 pub trait UiExt {
@@ -38,6 +39,22 @@ pub trait UiExt {
     
     /// Creates a single-line text edit field that fills available width minus spacing.
     fn single_line_text_field(&mut self, text: &mut dyn TextBuffer, spacing_x: f32);
+
+    /// Creates a clickable table with the specified columns and header content
+    fn create_clickable_table<H: FnOnce(&mut egui_extras::TableRow), B: FnOnce(TableBody)>(
+        &mut self,
+        columns: Vec<Column>,
+        header_content: H,
+        body_content: B
+    );
+
+    /// Creates a standard table with the specified columns and header content
+    fn create_standard_table<H: FnOnce(&mut egui_extras::TableRow), B: FnOnce(TableBody)>(
+        &mut self,
+        columns: Vec<Column>,
+        header_content: H,
+        body_content: B
+    );
 }
 
 impl UiExt for Ui {
@@ -94,4 +111,59 @@ impl UiExt for Ui {
         }
         self.add_sized(dimensions, Button::new(text.into()))
     }
+
+    fn create_clickable_table<H, B>(
+        &mut self,
+        columns: Vec<Column>,
+        header_content: H,
+        body_content: B
+    ) where
+        H: FnOnce(&mut egui_extras::TableRow),
+        B: FnOnce(TableBody)
+    {
+        let mut builder = TableBuilder::new(self)
+            .striped(true)
+            .resizable(true)
+            .sense(egui::Sense::click())
+            .min_scrolled_height(0.0);
+            
+        // Add all columns to the builder
+        for column in columns {
+            builder = builder.column(column);
+        }
+        
+        builder
+            .header(super::constants::table::HEADER_HEIGHT, |mut header| {
+                header_content(&mut header);
+            })
+            .body(body_content);
+    }
+
+    fn create_standard_table<H, B>(
+        &mut self,
+        columns: Vec<Column>,
+        header_content: H,
+        body_content: B
+    ) where
+        H: FnOnce(&mut egui_extras::TableRow),
+        B: FnOnce(TableBody)
+    {
+        let mut builder = TableBuilder::new(self)
+            .striped(true)
+            .resizable(true)
+            .min_scrolled_height(0.0);
+            
+        // Add all columns to the builder
+        for column in columns {
+            builder = builder.column(column);
+        }
+        
+        builder
+            .header(super::constants::table::HEADER_HEIGHT, |mut header| {
+                header_content(&mut header);
+            })
+            .body(body_content);
+    }
+    
+    
 }
