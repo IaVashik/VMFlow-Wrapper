@@ -6,7 +6,8 @@ use themes::Themes;
 use crate::app::HammerTimeGui as App;
 
 pub mod themes;
-mod utils;
+pub mod utils;
+pub mod constants;
 
 // Modules for the various windows used in the GUI.
 pub mod about;
