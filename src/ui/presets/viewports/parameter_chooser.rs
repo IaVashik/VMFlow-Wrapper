@@ -1,7 +1,6 @@
 use eframe::egui::{self, CentralPanel, Context};
-use egui_extras::{Column, TableBody};
-use crate::compilers;
-use crate::settings::{GameConfiguration, ParameterOverride, Settings};
+use egui_extras::Column;
+use crate::settings::Settings;
 use crate::ui::{
     utils::UiExt,
     constants::font,

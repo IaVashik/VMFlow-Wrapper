@@ -1,7 +1,6 @@
 use eframe::egui::{
-    self, CentralPanel, Context, ViewportBuilder, ViewportClass, ViewportCommand, ViewportId,
+    CentralPanel, Context, ViewportBuilder, ViewportClass, ViewportId,
 };
-use themes::Themes;
 
 use crate::app::HammerTimeGui as App;
 

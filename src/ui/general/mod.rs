@@ -1,11 +1,9 @@
-use crate::{app::HammerTimeGui, settings::Preset};
+use crate::app::HammerTimeGui;
 use eframe::egui::{
-    self, Align, DroppedFile, Grid, InnerResponse, InputState, Response, TextBuffer, TextEdit, Ui,
-    Widget,
+    self, Align, Ui,
 };
-use egui::{menu, CentralPanel, Context, Layout, RichText, ScrollArea};
-use super::{settings, utils::UiExt};
-use rfd::FileDialog;
+use egui::{Layout, RichText};
+use super::utils::UiExt;
 
 
 mod buttons_panel;

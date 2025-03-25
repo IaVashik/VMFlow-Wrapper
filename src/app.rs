@@ -1,7 +1,5 @@
 use crate::settings::{VmfMap, Settings};
 use crate::ui;
-use eframe::App;
-use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
 // Error scan and info about them

@@ -7,9 +7,8 @@ use eframe::egui::{self, CentralPanel, Context, RichText, ViewportClass};
 use rfd::FileDialog;
 
 use crate::{
-    app::HammerTimeGui,
-    settings::{GameConfiguration, Settings},
-    ui::{themes::Themes, utils::UiExt},
+    settings::Settings,
+    ui::utils::UiExt,
 };
 
 /// Stores the state of the settings window.

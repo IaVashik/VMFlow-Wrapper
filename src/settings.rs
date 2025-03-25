@@ -1,8 +1,7 @@
-use std::{fmt, path::PathBuf, sync::LazyLock};
+use std::path::PathBuf;
 
 use compilers_types::{CompilerConfig, Parameter};
-use eframe::egui::ahash::HashMap;
-use serde::{de, Deserialize, Serialize};
+use serde::{Deserialize, Serialize};
 
 use crate::compilers;
 

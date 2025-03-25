@@ -1,7 +1,7 @@
 use eframe::egui::{self, CentralPanel, Context};
 use egui_extras::{Column, TableBuilder};
 use crate::compilers;
-use crate::settings::{GameConfiguration, Settings};
+use crate::settings::Settings;
 use crate::ui::utils::UiExt;
 
 pub fn build(ctx: &Context, settings: &mut Settings, selected_row: &mut usize) -> bool {

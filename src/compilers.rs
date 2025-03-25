@@ -1,4 +1,4 @@
-use std::{collections::HashMap, fs::DirEntry, sync::LazyLock};
+use std::sync::LazyLock;
 use include_dir::{include_dir, Dir};
 use compilers_types::*;
 

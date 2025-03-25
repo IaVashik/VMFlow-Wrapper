@@ -1,9 +1,8 @@
-use compilers_types::{Parameter, ParameterType};
+use compilers_types::ParameterType;
 use eframe::egui;
 use egui_extras::{Column, TableBody};
 
 use crate::{
-    compilers, 
     settings::{SelectedCompiler, Settings}, 
     ui::{
         utils::UiExt,

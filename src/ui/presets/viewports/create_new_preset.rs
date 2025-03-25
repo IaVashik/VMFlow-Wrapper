@@ -1,5 +1,5 @@
-use eframe::egui::{self, CentralPanel, Context};
-use crate::settings::{GameConfiguration, Settings};
+use eframe::egui::{CentralPanel, Context};
+use crate::settings::Settings;
 use crate::ui::utils::UiExt;
 
 /// Builds the UI for editing a preset and handles saving.
