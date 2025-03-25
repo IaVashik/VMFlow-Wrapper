@@ -1,20 +1,20 @@
-use crate::app::HammerTimeGui;
+use crate::{app::HammerTimeGui, settings::Preset};
 use eframe::egui::{
     self, Align, DroppedFile, Grid, InnerResponse, InputState, Response, TextBuffer, TextEdit, Ui,
     Widget,
 };
-use egui::{menu, CentralPanel, Context, Layout, RichText, ScrollArea, Vec2};
-// use egui_theme_switch::global_theme_switch;
+use egui::{menu, CentralPanel, Context, Layout, RichText, ScrollArea};
 use super::{settings, utils::UiExt};
 use rfd::FileDialog;
 
 
 mod buttons_panel;
+mod render_apps_grid;
 
 pub fn show(ui: &mut Ui, app: &mut HammerTimeGui) {
     #[cfg(debug_assertions)]
     {
-        let cb = ui.checkbox_sized(&mut app.debug_hover, "Enable Debug", 8.0);
+        let cb = ui.checkbox_with_size(&mut app.debug_hover, "Enable Debug", 8.0);
         if cb.changed() {
             ui.ctx().set_debug_on_hover(app.debug_hover);
         }
@@ -22,9 +22,9 @@ pub fn show(ui: &mut Ui, app: &mut HammerTimeGui) {
 
     ui.horizontal(|ui| {
         ui.with_layout(Layout::left_to_right(Align::Min), |ui| {
-            ui.label_sized("We need a really cool name!", 12.0); // CropFactor Team Compile Tool
+            ui.label_with_size("We need a really cool name!", 12.0); // CropFactor Team Compile Tool
             ui.add_space(ui.available_width() - 50.0);
-            if ui.button_sized("Settings", 10.0).clicked() {
+            if ui.button_with_size("Settings", 10.0).clicked() {
                 app.settings_window.is_open = true;
             }
         });
@@ -32,7 +32,7 @@ pub fn show(ui: &mut Ui, app: &mut HammerTimeGui) {
     ui.add_space(15.0);
 
     ui.horizontal(|ui| {
-        ui.label_sized("Compile Preset:", 12.0);
+        ui.label_with_size("Compile Preset:", 12.0);
         ui.add_space(ui.available_width() - 178.0);
         
         ui.scope(|ui| {
@@ -52,7 +52,7 @@ pub fn show(ui: &mut Ui, app: &mut HammerTimeGui) {
                 });
         });
         
-        if ui.button_sized("Edit Presets", 8.0).clicked() {
+        if ui.button_with_size("Edit Presets", 8.0).clicked() {
             app.presets_window.is_open = true;
         }
     });
@@ -62,72 +62,38 @@ pub fn show(ui: &mut Ui, app: &mut HammerTimeGui) {
         ui.set_width(ui.available_width());
 
         if let Some(preset) = app.settings.current_preset_mut() {
-            Grid::new("apps_grid") // ! todo
-                .striped(true)
-                .min_col_width(ui.available_width() / preset.apps.len() as f32 - 5.0)
-                .show(ui, |ui| {
-                    // Первая строка: имена приложений.
-                    for app in &preset.apps {
-                        ui.label_sized(app.name(), 10.0);
-                    }
-                    ui.end_row();
-
-                    // Вторая строка: аргументы запуска.
-                    for app in &mut preset.apps {
-                        ui.vertical(|ui: &mut Ui| { // TODO!!!
-                            ui.checkbox_sized(&mut app.activated, "Enabled", 6.0);
-                            let params_text = app.parameters.iter()
-                                .filter_map(|param_override| param_override.to_command_arg())
-                                .collect::<Vec<String>>()
-                                .join("\n");
-                            let mut rich_text = RichText::new(params_text).size(8.);
-                            if !app.activated {
-                                rich_text = rich_text
-                                    .strikethrough()
-                                    .color(egui::Color32::GRAY);
-                            }
-                    
-                            ui.label(rich_text);
-                        });
-                    }
-                    ui.end_row();
-                });
-        } else {
-            ui.label("First, create a preset.");
+            render_apps_grid::build(ui, preset);
         }
     });
 
     ui.add_space(15.0);
 
-    ui.label(
-        RichText::new("Map Source Files (0 in queue):")
-            .size(8.0)
-            .weak(),
-    ); // todo
+    let map_files_text = RichText::new("Map Source Files (0 in queue):").size(8.0).weak();
+    ui.label(map_files_text); 
 
     egui::Frame::canvas(ui.style()).show(ui, |ui| {
         ui.set_height((ui.available_height() - 44.0).max(1.0));
         ui.set_width(ui.available_width());
 
         if app.paths.is_empty() {
-            ui.with_layout(Layout::top_down(Align::Center), |ui| {
-                ui.label(RichText::new("TODO TEXT").monospace().small_raised());
-            });
+            ui.centered_label_with_size("TODO TEXT", 8.);
             return;
         }
+
+        // todo here
     });
 
     buttons_panel::build(ui, app);
 
     ui.separator();
     ui.horizontal(|ui| {
-        ui.label_sized(super::VERSION, 8.0);
-        ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
-            use egui::special_emojis::GITHUB;
-            ui.hyperlink_to(
-                RichText::new(format!("{GITHUB} GitHub repo")).size(8.0),
-                "https://github.com/IaVashik/TODO",
-            );
-        });
+        ui.label_with_size(super::VERSION, 8.0);
+        ui.add_space(ui.available_width() - 55.);
+        
+        use egui::special_emojis::GITHUB;
+        ui.hyperlink_to(
+            RichText::new(format!("{GITHUB} GitHub repo")).size(8.0),
+            "https://github.com/IaVashik/TODO",
+        );
     });
 }
