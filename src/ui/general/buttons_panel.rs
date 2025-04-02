@@ -25,7 +25,7 @@ pub fn build(ui: &mut egui::Ui, app: &mut App) {
 /// * `app` - The application state
 fn build_left_ui(ui: &mut egui::Ui, app: &mut App) {
     // Skip rendering buttons if processing is active
-    if app.processing {
+    if app.compile_window.is_open {
         // ui.label(app.process_status.to_string())
         //     .on_hover_cursor(egui::CursorIcon::Wait);
         return;
@@ -55,13 +55,13 @@ fn build_left_ui(ui: &mut egui::Ui, app: &mut App) {
 /// * `app` - The application state
 fn build_right_ui(ui: &mut egui::Ui, app: &mut App) {
     ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-        if app.processing {
+        if app.compile_window.is_open {
             let button = egui::Button::new("Processing...");
             ui.add_enabled(false, button);
             ui.add(egui::widgets::Spinner::new())
                 .on_hover_cursor(egui::CursorIcon::Progress);
         } else if ui.button("\tBegin Compile!\t").clicked() {
-            app.processing = true;
+            app.compile_window.is_open = true;
         }
     });
 }

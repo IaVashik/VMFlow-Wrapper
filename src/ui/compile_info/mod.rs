@@ -1,16 +1,36 @@
+use std::sync::{atomic::AtomicBool, Arc};
+
 use eframe::egui::{self, CentralPanel, Context, Ui, ViewportClass};
 
 use crate::{app::HammerTimeGui, ui::utils::UiExt};
 
 const SIDE_PANEL_WIDTH: f32 = 140.0;
 
+/// TODO comment.
+#[derive(Default)]
+pub struct CompileWindow {
+    pub logs: String,
+    pub start_time: u64,
+    // pub warnings: CompileError,
+    // pub errors: CompileError,
+    
+    pub is_canceled: Arc<AtomicBool>,
+    pub is_open: bool,
+}
 
-pub fn build_viewport(ctx: &Context, class: ViewportClass, app: &mut HammerTimeGui) {
+pub fn build_viewport(
+    ctx: &Context, 
+    class: ViewportClass, 
+    app: &mut HammerTimeGui
+) {
     assert!(
         class == ViewportClass::Immediate,
         "This egui backend doesn't support multiple viewports"
     );
 
+    let window_state = &mut app.compile_window;
+    let settings = &app.settings;
+    let maps = &app.maps;
     CentralPanel::default().show(ctx, |ui| {
         draw_logs(ui);
 
@@ -25,14 +45,16 @@ pub fn build_viewport(ctx: &Context, class: ViewportClass, app: &mut HammerTimeG
                     ui.add_space(14.);
 
                     ui.label_with_size("Total Elapsed Time: TODO", 10.);
-                    ui.button_with_dimensions("Abort", [ui.available_width(), 18.]);
+                    if ui.button_with_dimensions("Abort", [ui.available_width(), 18.]).clicked() {
+                        println!("todo: unimplemented!");
+                    }
                 });
         
     });
 
     // Tell parent viewport that we should not show next frame:
     if ctx.input(|i| i.viewport().close_requested()) {
-        app.processing = false;
+        window_state.is_open = false;
     }
 }
 

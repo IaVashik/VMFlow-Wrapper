@@ -1,8 +1,10 @@
 use serde::{de, Deserialize, Serialize};
 
 use crate::settings::{VmfMap, Settings};
+use crate::backend::ProcessingMessage;
 use crate::ui;
 use std::path::PathBuf;
+use std::sync::mpsc::Receiver;
 
 // Error scan and info about them
 // Automatic creation of particle manifests for optimization and correct operation of particles on the map

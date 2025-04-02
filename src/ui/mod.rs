@@ -54,7 +54,7 @@ pub fn build_ui(ctx: &Context, app: &mut App) {
         });
         is_any_immediate_open = true;
     }
-    if app.processing {
+    if app.compile_window.is_open {
         show_viewport_immediate(ctx, "Compile Process", [600.0, 400.0], |ctx, class| {
             compile_info::build_viewport(ctx, class, app)
         });
@@ -72,7 +72,7 @@ pub fn build_ui(ctx: &Context, app: &mut App) {
 
     // Handle dropped files.
     ctx.input(|i| {
-        if !app.processing && !i.raw.dropped_files.is_empty() {
+        if !is_any_immediate_open && !i.raw.dropped_files.is_empty() {
             app.handle_dropped_files(&i.raw.dropped_files);
         }
     });

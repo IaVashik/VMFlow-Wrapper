@@ -73,7 +73,7 @@ pub fn show(ui: &mut Ui, app: &mut HammerTimeGui) {
         ui.set_height((ui.available_height() - 44.0).max(1.0));
         ui.set_width(ui.available_width());
 
-        if app.paths.is_empty() {
+        if app.maps.is_empty() {
             ui.centered_label_with_size("TODO TEXT", 8.);
             return;
         }

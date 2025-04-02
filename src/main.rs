@@ -4,6 +4,7 @@ mod app;
 mod settings;
 mod compilers;
 mod ui;
+mod backend;
 
 use app::HammerTimeGui;
 use eframe::{self, egui};
