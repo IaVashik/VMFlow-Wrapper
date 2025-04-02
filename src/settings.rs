@@ -290,13 +290,6 @@ pub struct GameConfiguration {
     pub output_dir: String,
     pub steam_app_id: Option<u32>,
     pub custom_apps_paths: Vec<String>, // index -> compiler config
-    
-    // TODO!!!!
-    // pub vbsp: String,
-    // pub vvis: String,
-    // pub vrad: String,
-    // pub bspzip: String,
-    // pub vpk: String,
 }
 
 impl Default for GameConfiguration {

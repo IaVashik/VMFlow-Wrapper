@@ -41,9 +41,9 @@ pub fn build(ui: &mut egui::Ui, settings: &mut Settings, selected_app: usize) ->
 /// * `app` - The selected compiler application containing parameters
 fn build_parameters_table(ui: &mut egui::Ui, app: &mut SelectedCompiler) {
     let columns = vec![
-        Column::auto(),
-        Column::remainder().clip(true),
-        Column::initial(50.).range(32.0..=80.0)
+        Column::auto(), // 100
+        Column::remainder(), // 515
+        Column::initial(64.).range(64.0..=150.0) // 95-100
     ];
     
     ui.create_standard_table(

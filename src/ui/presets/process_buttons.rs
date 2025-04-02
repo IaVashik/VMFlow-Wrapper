@@ -13,11 +13,15 @@ pub fn add_process_button(ui: &mut egui::Ui, window_state: &mut PresetEditorWind
     }
 }
 
-pub fn remove_process_button(_ui: &mut egui::Ui, _settings: &mut Settings, _window_state: &mut PresetEditorWindow) {
-    // TODO: Implement process removal
-    if _ui.button_with_dimensions("-", [SHORT_BUTTON_WIDTH, 18.]).clicked() {
-        println!("Remove process - not implemented")
-    }
+pub fn remove_process_button(ui: &mut egui::Ui, settings: &mut Settings, window_state: &mut PresetEditorWindow) {
+    if ui.button_with_dimensions("-", [SHORT_BUTTON_WIDTH, 18.]).clicked() {
+        let preset = settings.current_preset_mut().unwrap(); // SAFETY: the button will be inactive if there is no preset
+
+        preset.apps.remove(window_state.selected_app);
+        if window_state.selected_app >= preset.apps.len() && !preset.apps.is_empty() {
+            window_state.selected_app = preset.apps.len() - 1;
+        }
+    } 
 }
 
 pub fn add_parameter_button(ui: &mut egui::Ui, window_state: &mut PresetEditorWindow) {

@@ -95,6 +95,10 @@ fn draw_preset_editor(
 
             ui.label("Process");
             process_buttons::add_process_button(ui, window_state);
+            // Disable remove control if there are no apps.
+            if settings.compile_presets.is_empty() || settings.current_preset().unwrap().apps.is_empty() {
+                ui.disable();
+            }
             process_buttons::remove_process_button(ui, settings, window_state);
             ui.add_space(ui.available_width()); // Use remaining space
         });
@@ -109,7 +113,7 @@ fn draw_preset_editor(
             command_line_preview::draw(ui, &settings, &window_state);
 
             // Disable parameter controls if there are no presets.
-            if settings.compile_presets.is_empty() {
+            if settings.compile_presets.is_empty() || settings.current_preset().unwrap().apps.is_empty() {
                 ui.disable();
             }
             process_buttons::add_parameter_button(ui, window_state);
