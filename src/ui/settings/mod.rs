@@ -123,7 +123,7 @@ pub fn build_viewport(
         ui.add_space(10.);
         let reset_button = ui.add_sized(
             [ui.available_width(), 10.], 
-            egui::Button::new(RichText::new("Reset Settings (Double Click)").size(10.))
+            egui::Button::new(RichText::new("Reset ALL Settings (Double Click)").size(10.))
         );
         if reset_button.double_clicked() {
             *settings = Settings::default();

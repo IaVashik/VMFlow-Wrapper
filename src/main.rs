@@ -43,7 +43,7 @@ fn main() {
     eframe::run_native(
         "TODO: We need a really cool name",
         options,
-        Box::new(|_cc| Ok(Box::<HammerTimeGui>::default())),
+        Box::new(|_cc| Ok(Box::new(HammerTimeGui::new()))),
     )
     .expect("Failed to run GUI app");
 }
