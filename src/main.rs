@@ -40,6 +40,18 @@ fn main() {
         ..Default::default()
     };
 
+    // Checks for wine
+    #[cfg(unix)]
+    if !is_wine_installed() {
+        eprintln!("Wine is not installed. To compile Source Engine maps on Unix-like systems, you need Wine!");
+        rfd::MessageDialog::new()
+        .set_title("Wine is not installed")
+            .set_description("To compile Source Engine maps on Unix-like systems, you need Wine!")
+            .set_level(rfd::MessageLevel::Error)
+            .show();
+        return;
+    }
+
     // Run the GUI application.
     eframe::run_native(
         "TODO: We need a really cool name",
@@ -49,6 +61,16 @@ fn main() {
     .expect("Failed to run GUI app");
 }
 
+#[cfg(unix)]
+fn is_wine_installed() -> bool {
+    use std::process::{Command, Stdio};
+    Command::new("wine")
+        .arg("--version")
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .status()
+        .is_ok()
+}
 
 // let should_toggle = ui.memory_mut(|m| {
 //     m.data
