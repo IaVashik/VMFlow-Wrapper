@@ -5,11 +5,13 @@ use super::PresetEditorWindow;
 use super::process_buttons::BUTTON_WIDTH;
 
 pub fn draw(ui: &mut egui::Ui, settings: &Settings, window_state: &PresetEditorWindow) {
-    let mut arg_str = String::new(); 
+    let mut arg_str = String::new(); // todo optimize
 
     if let Some(preset) = settings.current_preset() {
         if let Some(app) = preset.apps.get(window_state.selected_app) {
             app.parameters_string(&mut arg_str); // Filling in the string
+            arg_str.push(' ');
+            arg_str.push_str(app.config().base_arguments.as_deref().unwrap_or_default());
         }
     }
 
