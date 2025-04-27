@@ -1,8 +1,8 @@
 name = "VVIS"
 is_builtin = false
 description = "Performs visibility tests for optimization."
-working_directory = "$binFolder"
-base_arguments = "-game $game$ $vmfFile"
+working_dir = "$binFolder"
+base_arguments = "-game $game $vmfFile"
 
 [[parameters]]
 name = "Fast"

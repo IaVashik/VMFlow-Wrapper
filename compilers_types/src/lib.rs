@@ -6,6 +6,7 @@ pub struct CompilerConfig {
     pub is_builtin: bool,
     pub description: String,
     pub parameters: Vec<Parameter>,
+    pub base_arguments: Option<String>,
     pub working_dir: Option<String>,
     pub custom_path: Option<String>,
 }

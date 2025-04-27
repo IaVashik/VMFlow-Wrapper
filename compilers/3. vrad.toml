@@ -1,8 +1,8 @@
 name = "VRAD"
 is_builtin = false
 description = "Generates static lighting."
-working_directory = "$binFolder"
-base_arguments = "-game $game$ $vmfFile"
+working_dir = "$binFolder"
+base_arguments = "-game $game $vmfFile"
 
 [[parameters]]
 name = "Bounces"

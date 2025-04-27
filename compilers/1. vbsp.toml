@@ -1,8 +1,8 @@
 name = "VBSP"
 is_builtin = false
 description = "BSP Compiler for Source Engine"
-working_directory = "$game/bin"
-base_arguments = "-game $game$ $vmfFile"
+working_dir = "$game/bin"
+base_arguments = "-game $game $vmfFile"
 
 [[parameters]]
 name = "Only Entities"

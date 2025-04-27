@@ -1,7 +1,7 @@
 name = "VPK"
 is_builtin = false
 description = "Valve Pack File Compiler"
-working_directory = ""
+working_dir = ""
 base_arguments = ""
 
 [[parameters]]

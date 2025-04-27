@@ -1,7 +1,7 @@
 name = "BSPZIP"
 is_builtin = false
 description = "Command line tool for modifying BSP files."
-working_directory = "$binFolder"
+working_dir = "$binFolder"
 base_arguments = "-game $game "
 
 [[parameters]]

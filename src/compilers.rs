@@ -13,6 +13,7 @@ pub static COMPILERS: LazyLock<Vec<CompilerConfig>> = LazyLock::new(|| {
         v.push(config);
     }
 
+    v.reverse();
     v
 });
 
