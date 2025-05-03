@@ -4,24 +4,26 @@ use super::PresetEditorWindow;
 
 pub fn draw(
     ui: &mut egui::Ui,
-    settings: &Settings,
+    settings: &mut Settings,
     window_state: &mut PresetEditorWindow,
 ) {
-    let preset = match settings.current_preset() {
+    let preset = match settings.current_preset_mut() {
         Some(preset) => preset,
         None => return,
     };
 
     egui::ScrollArea::vertical().show(ui, |ui| {
-        ui.vertical(|ui| {    
-            for (i, p) in preset.apps.iter().enumerate() {
-                let is_selected = window_state.selected_app == i;
-                let selectable = egui::SelectableLabel::new(is_selected, p.name());
-                if ui.add_sized([ui.available_width(), 12.0], selectable).clicked() {
-                    window_state.selected_app = i;
-                }
-            }
-            
+        ui.vertical(|ui| {
+            egui_dnd::dnd(ui, "dnd_process_list").show_vec(&mut preset.apps, |ui, item, handle, state| {
+                let is_selected = window_state.selected_app == state.index || state.dragged;
+                let selectable = egui::SelectableLabel::new(is_selected, item.name());
+                handle.ui(ui, |ui| {
+                    let label = ui.add_sized([ui.available_width(), 12.0], selectable);
+                    if state.dragged || label.clicked() {
+                        window_state.selected_app = state.index;    
+                    }
+                });
+            });            
         });
     });
 }
