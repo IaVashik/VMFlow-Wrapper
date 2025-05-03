@@ -54,7 +54,7 @@ fn main() {
 
     // Run the GUI application.
     eframe::run_native(
-        "TODO: We need a really cool name",
+        "VMFlow Wrapper",
         options,
         Box::new(|_cc| Ok(Box::new(HammerTimeGui::new()))),
     )

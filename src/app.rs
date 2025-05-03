@@ -43,7 +43,7 @@ impl HammerTimeGui {
 
     pub fn save_config(&self) -> Result<(), confy::ConfyError> {
         println!("Saving data...");
-        confy::store("hammer_time_wrapper", "config", &self)
+        confy::store("VMFlow_wrapper", "config", &self)
     }
 }
 
