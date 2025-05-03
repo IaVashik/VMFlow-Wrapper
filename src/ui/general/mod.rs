@@ -66,7 +66,10 @@ pub fn show(ui: &mut Ui, app: &mut HammerTimeGui) {
 
     ui.add_space(15.0);
 
-    let map_files_text = RichText::new("Map Source Files (0 in queue):").size(8.0).weak();
+    let label_content = format!("Map Source Files ({} in queue):", app.maps.len());
+    let map_files_text = RichText::new(label_content)
+        .size(8.0)
+        .weak();
     ui.label(map_files_text); 
 
     egui::Frame::canvas(ui.style()).show(ui, |ui| {
@@ -78,7 +81,43 @@ pub fn show(ui: &mut Ui, app: &mut HammerTimeGui) {
             return;
         }
 
-        // todo here
+        // Map list
+        let mut indices_to_remove = Vec::new();
+        egui_dnd::dnd(ui, "dnd_maps").show_vec(&mut app.maps, |ui, map, handle, state| {
+            handle.ui(ui, |ui| {
+                ui.horizontal(|ui| {
+                    ui.label(&map.name)    
+                        .on_hover_text(map.path.as_os_str().to_str().unwrap());
+                    ui.add_space(10.);
+
+                    // ui.separator();
+                    // ui.add_space(10.);
+
+                    // egui::ComboBox::from_id_salt("MapPreset") // todo: just for test
+                    //     .selected_text(egui::RichText::new(app.settings.current_preset_name()).size(8.))
+                    //     .truncate()
+                    //     .width(60.0)
+                    //     .show_ui(ui, |ui| {
+                    //         for (i, preset) in app.settings.compile_presets.iter().enumerate() {
+                    //             ui.selectable_value(
+                    //                 &mut app.settings.current_preset_index,
+                    //                 i,
+                    //                 RichText::new(&preset.name).size(8.),
+                    //             );
+                    //         }
+                    //     });
+                    ui.separator();
+                    if ui.add_enabled(true, egui::Button::new("🗑").small()).clicked() {
+                        indices_to_remove.push(state.index);
+                    }
+                });
+            });
+        });            
+
+        // Removing elements after iteration
+        for index in indices_to_remove.iter().rev() {
+            app.remove_map(*index);
+        }
     });
 
     buttons_panel::build(ui, app);

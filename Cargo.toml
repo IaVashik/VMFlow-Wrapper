@@ -19,6 +19,7 @@ include_dir = { version = "0.7.4", features = ["glob"] }
 toml = "0.8.20"
 egui_flex = "0.3.0"
 confy = "0.6.1"
+egui_dnd = "=0.12.0"
 
 
 [build-dependencies]

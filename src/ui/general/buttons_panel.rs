@@ -41,7 +41,7 @@ fn build_left_ui(ui: &mut egui::Ui, app: &mut App) {
             }
         }
         if ui.button_with_size("Clear", 12.0).clicked() {
-            // app.clear_maps();
+            app.maps.clear();
         }
     });
 }
