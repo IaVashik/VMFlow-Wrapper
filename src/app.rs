@@ -16,20 +16,16 @@ pub struct CompileError {
     pub text: String,
 }
 
-#[derive(Default, Serialize, Deserialize)]
+#[derive(Default)]
 pub struct HammerTimeGui {
     pub settings: Settings,
     pub maps: Vec<VmfMap>,
 
     // additionals windows
-    #[serde(skip)]
     pub settings_window: ui::settings::SettingsWindow,
-    #[serde(skip)]
     pub presets_window: ui::presets::PresetEditorWindow,
-    #[serde(skip)]
     pub compile_window: ui::compile_info::CompileWindow,
 
-    #[serde(skip)]
     pub backend_rx: Option<Receiver<ProcessingMessage>>,
 
     #[cfg(debug_assertions)]
@@ -38,12 +34,16 @@ pub struct HammerTimeGui {
 
 impl HammerTimeGui {
     pub fn new() -> Self {
-        confy::load("hammer_time_wrapper", "config").unwrap_or_default()
+        let settings = confy::load("VMFlow_wrapper", "config").unwrap_or_default();
+        Self {
+            settings,
+            ..Default::default()
+        }
     }
 
     pub fn save_config(&self) -> Result<(), confy::ConfyError> {
         println!("Saving data...");
-        confy::store("VMFlow_wrapper", "config", &self)
+        confy::store("VMFlow_wrapper", "config", &self.settings)
     }
 }
 
