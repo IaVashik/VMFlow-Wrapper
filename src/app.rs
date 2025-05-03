@@ -61,15 +61,44 @@ impl eframe::App for HammerTimeGui {
 
 impl HammerTimeGui {
     pub fn handle_dropped_files(&mut self, files: &Vec<eframe::egui::DroppedFile>) {
-        todo!()
-        // for file in files.iter().cloned() {
-        //     if let Some(path) = &file.path {
-        //         if path.is_dir() {
-        //             self.add_maps(path);
-        //         } else {
-        //             self.add_map(path);
-        //         }
-        //     }
-        // }
+        for file in files.iter().cloned() {
+            if let Some(path) = &file.path {
+                if path.is_dir() {
+                    self.add_maps(path);
+                } else {
+                    self.add_map(path);
+                }
+            }
+        }
+    }
+
+    pub fn add_map(&mut self, path: &Path) {
+        if let Some(ext) = path.extension().and_then(|s| s.to_str()) {
+            if self.maps.iter().any(|map| map.path == path) || ext != "vmf" {
+                return;
+            }
+
+            let map = VmfMap { 
+                name: path.file_name().unwrap().to_string_lossy().to_string(), 
+                path: path.to_path_buf(), 
+                activated: true 
+            };
+            self.maps.push(map);
+            println!("PLACEHOLDER INFO: added {path:?}")
+        }
+    }
+
+    pub fn add_maps(&mut self, path_dir: &Path) {
+        walkdir::WalkDir::new(path_dir)
+            .into_iter()
+            .filter_map(Result::ok)
+            .filter(|e| e.file_type().is_file())
+            .for_each(|path| {
+                self.add_map(path.path());
+            });
+    }
+
+    pub fn remove_map(&mut self, index: usize) {
+        self.maps.remove(index);
     }
 }

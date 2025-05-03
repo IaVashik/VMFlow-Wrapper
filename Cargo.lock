@@ -19,6 +19,7 @@ dependencies = [
  "rfd",
  "serde",
  "toml",
+ "walkdir",
  "winresource",
 ]
 
