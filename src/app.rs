@@ -1,9 +1,10 @@
 use serde::{de, Deserialize, Serialize};
 
 use crate::settings::{VmfMap, Settings};
-use crate::backend::ProcessingMessage;
+use crate::backend::{self, ProcessingMessage};
 use crate::ui;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
+use std::sync;
 use std::sync::mpsc::Receiver;
 
 // Error scan and info about them
@@ -27,6 +28,7 @@ pub struct HammerTimeGui {
     pub compile_window: ui::compile_info::CompileWindow,
 
     pub backend_rx: Option<Receiver<ProcessingMessage>>,
+    pub backend_cancel_flag: Option<sync::Arc<sync::atomic::AtomicBool>>,
 
     #[cfg(debug_assertions)]
     pub debug_hover: bool,
@@ -44,6 +46,33 @@ impl HammerTimeGui {
     pub fn save_config(&self) -> Result<(), confy::ConfyError> {
         println!("Saving data...");
         confy::store("VMFlow_wrapper", "config", &self.settings)
+    }
+
+    pub fn start_compile(&mut self) {
+        let (tx, rx) = sync::mpsc::channel();
+        let cancel_flag = sync::Arc::new(sync::atomic::AtomicBool::new(false));
+        self.backend_rx = Some(rx);
+        self.backend_cancel_flag = Some(cancel_flag.clone());
+
+        self.compile_window.logs.clear();
+        self.compile_window.start_time = std::time::Instant::now();
+
+        // TODO: remove cloning, now only for test
+        let preset = self.settings.current_preset().unwrap().clone();
+        let game = self.settings.current_game().unwrap().clone();
+        let maps = self.maps.clone();
+        backend::start_compilation_thread(tx, preset, game, maps, cancel_flag);
+    }
+
+    pub fn cancel_compile(&mut self) {
+        if let Some(cancel_flag) = &self.backend_cancel_flag {
+            println!("Sending cancel signal to backend...");
+            cancel_flag.store(true, sync::atomic::Ordering::SeqCst);
+        }
+
+        // clear backend receiver and cancel flag to reset compilation state.
+        self.backend_rx = None; 
+        self.backend_cancel_flag = None;
     }
 }
 

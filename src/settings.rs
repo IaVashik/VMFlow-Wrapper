@@ -5,11 +5,11 @@ use serde::{Deserialize, Serialize};
 
 use crate::compilers;
 
-#[derive(Default, Serialize, Deserialize)]
+#[derive(Default, Serialize, Deserialize, Clone, Hash)]
 pub struct VmfMap {
-    name: String,
-    path: PathBuf,
-    activate: bool,
+    pub name: String,
+    pub path: PathBuf,
+    pub activated: bool,
     // order_idx: i32, // ?!
 }
 
@@ -25,7 +25,7 @@ impl Preset {
     }
 }
 
-#[derive(Default, Serialize, Deserialize, Clone)]
+#[derive(Default, Serialize, Deserialize, Clone, Hash)]
 pub struct SelectedCompiler {
     pub compiler_idx: usize,
     pub activated: bool,
@@ -100,17 +100,20 @@ impl SelectedCompiler {
         override_idx
     }
     
-    /// Generate command line arguments for this compiler
-    pub fn to_command_args(&self) -> Option<String> {
-        if !self.activated {
-            return None;
-        }
-        
-        compilers::get_compiler(self.compiler_idx).map(|compiler| {
-            let mut cmd = compiler.name.clone();
-            self.parameters_string(&mut cmd);
-            cmd
-        })
+    /// Generate command TODO
+    pub fn get_command_params(&self) -> Vec<String> { 
+        let base_args_iter = self.config().base_arguments
+            .as_ref() 
+            .map(|s| s.split_whitespace().map(String::from)) 
+            .into_iter() 
+            .flatten();
+
+        let params_iter = self.parameters
+            .iter()
+            .filter_map(|p| p.get_command_parts()) // Option<impl Iterator<Item = String>> -> impl Iterator<Item = String>
+            .flatten();
+
+            params_iter.chain(base_args_iter).collect()
     }
 
     // rename me
@@ -124,7 +127,7 @@ impl SelectedCompiler {
 }
 
 /// Structure representing an override for a parameter.
-#[derive(Default, Serialize, Deserialize, Clone)]
+#[derive(Default, Serialize, Deserialize, Clone, Hash)]
 pub struct ParameterOverride {
     pub compiler_idx: usize,
     pub parameter_idx: usize,
@@ -182,83 +185,6 @@ impl ParameterOverride {
             .and_then(|p| p.default_value.as_deref())
     }
     
-    /// Set value with validation
-    // pub fn correct_value(&mut self, value: Option<String>) -> Result<(), String> {
-    //     if let Some(param) = self.parameter() {
-    //         if let Some(ref val) = value {
-    //             // Validate value based on parameter type
-    //             match param.value_type {
-    //                 ParameterType::Integer => {
-    //                     if val.parse::<i64>().is_err() {
-    //                         return Err(format!("Invalid integer value: {}", val));
-    //                     }
-                        
-    //                     // Check constraints
-    //                     if let Some(ref constraints) = param.constraints {
-    //                         if let Ok(num) = val.parse::<f64>() {
-    //                             if let Some(min) = constraints.min_value {
-    //                                 if num < min {
-    //                                     return Err(format!("Value {} is less than minimum {}", num, min));
-    //                                 }
-    //                             }
-    //                             if let Some(max) = constraints.max_value {
-    //                                 if num > max {
-    //                                     return Err(format!("Value {} is greater than maximum {}", num, max));
-    //                                 }
-    //                             }
-    //                         }
-    //                     }
-    //                 },
-    //                 ParameterType::Float => {
-    //                     if val.parse::<f64>().is_err() {
-    //                         return Err(format!("Invalid float value: {}", val));
-    //                     }
-                        
-    //                     // Check constraints
-    //                     if let Some(ref constraints) = param.constraints {
-    //                         if let Ok(num) = val.parse::<f64>() {
-    //                             if let Some(min) = constraints.min_value {
-    //                                 if num < min {
-    //                                     return Err(format!("Value {} is less than minimum {}", num, min));
-    //                                 }
-    //                             }
-    //                             if let Some(max) = constraints.max_value {
-    //                                 if num > max {
-    //                                     return Err(format!("Value {} is greater than maximum {}", num, max));
-    //                                 }
-    //                             }
-    //                         }
-    //                     }
-    //                 },
-    //                 ParameterType::Bool => {
-    //                     if val != "true" && val != "false" {
-    //                         return Err(format!("Invalid boolean value: {}", val));
-    //                     }
-    //                 },
-    //                 ParameterType::Path => {
-    //                     // Path validation if needed
-    //                 },
-    //                 ParameterType::String => {
-    //                     // String validation if needed
-    //                     if let Some(ref constraints) = param.constraints {
-    //                         if let Some(ref pattern) = constraints.regex_pattern {
-    //                             // Regex validation would go here
-    //                             // For simplicity, we're skipping the actual regex check
-    //                         }
-    //                     }
-    //                 },
-    //                 ParameterType::Flag => {
-    //                     // Flags don't have values
-    //                     return Err("Flag parameters don't accept values".to_string());
-    //                 },
-    //             }
-    //         }
-    //     }
-        
-    //     self.value = value;
-    //     Ok(())
-    // }
-    
     /// Generate command line argument
     pub fn to_command_arg(&self) -> Option<String> {     
         if !self.activated {
@@ -279,6 +205,40 @@ impl ParameterOverride {
             }
         }).filter(|s| !s.is_empty())
     }
+
+    /// todo comm
+    pub fn get_command_parts(&self) -> Option<Vec<String>> {
+        if !self.activated {
+            return None;
+        }
+
+        self.parameter().map(|param| {
+            match param.value_type {
+                compilers_types::ParameterType::Flag => vec![param.argument.clone()],
+                _ => {
+                    let value_str = self.value.as_ref()
+                        .or_else(|| param.default_value.as_ref())
+                        .cloned()
+                        .unwrap_or_default();
+                    if param.argument.is_empty() && value_str.is_empty() {
+                        // Special case for a parameter like "Command Line Argument" in GAME
+                        // If the value is empty, do not add anything
+                        vec![]
+                    } else if param.argument.is_empty() && !value_str.is_empty() {
+                        // Only the value (for "Command Line Argument" in GAME)
+                        vec![value_str]
+                    } else if !value_str.is_empty() {
+                        // Argument and value
+                        vec![param.argument.clone(), value_str]
+                    } else {
+                        // Only the argument if the value is empty
+                        // Although for most non-flags this is meaningless, the compiler requires it :p
+                        vec![param.argument.clone()]
+                    }
+                }
+            }
+        }).filter(|parts| !parts.is_empty())
+    } 
 }
 
 

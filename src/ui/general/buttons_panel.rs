@@ -61,6 +61,7 @@ fn build_right_ui(ui: &mut egui::Ui, app: &mut App) {
             ui.add(egui::widgets::Spinner::new())
                 .on_hover_cursor(egui::CursorIcon::Progress);
         } else if ui.button("\tBegin Compile!\t").clicked() {
+            app.start_compile();
             app.compile_window.is_open = true;
         }
     });

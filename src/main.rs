@@ -71,19 +71,3 @@ fn is_wine_installed() -> bool {
         .status()
         .is_ok()
 }
-
-// let should_toggle = ui.memory_mut(|m| {
-//     m.data
-//         .get_temp::<bool>(header_collapsing_id)
-//         .unwrap_or_default()
-// });
-
-// if should_toggle {
-//     state.toggle(ui);
-
-//     ui.memory_mut(|m| {
-//         let should_toggle =
-//             m.data.get_temp_mut_or_default::<bool>(header_collapsing_id);
-//         *should_toggle = false;
-//     });
-// }
