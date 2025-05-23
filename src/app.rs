@@ -18,7 +18,7 @@ pub struct CompileError {
 }
 
 #[derive(Default)]
-pub struct HammerTimeGui {
+pub struct VmFlowApp {
     pub settings: Settings,
     pub maps: Vec<VmfMap>,
 
@@ -34,7 +34,7 @@ pub struct HammerTimeGui {
     pub debug_hover: bool,
 }
 
-impl HammerTimeGui {
+impl VmFlowApp {
     pub fn new() -> Self {
         let settings = confy::load("VMFlow_wrapper", "config").unwrap_or_default();
         Self {
@@ -76,7 +76,7 @@ impl HammerTimeGui {
     }
 }
 
-impl eframe::App for HammerTimeGui {
+impl eframe::App for VmFlowApp {
     fn update(&mut self, ctx: &eframe::egui::Context, frame: &mut eframe::Frame) {
         ui::build_ui(ctx, self);
 
@@ -88,7 +88,7 @@ impl eframe::App for HammerTimeGui {
     }
 }
 
-impl HammerTimeGui {
+impl VmFlowApp {
     pub fn handle_dropped_files(&mut self, files: &Vec<eframe::egui::DroppedFile>) {
         for file in files.iter().cloned() {
             if let Some(path) = &file.path {

@@ -2,7 +2,7 @@ use std::sync::{atomic::AtomicBool, Arc};
 
 use eframe::egui::{self, CentralPanel, Context, Ui, ViewportClass};
 
-use crate::{app::HammerTimeGui, ui::utils::UiExt};
+use crate::{app::VmFlowApp, ui::utils::UiExt};
 
 const SIDE_PANEL_WIDTH: f32 = 140.0;
 
@@ -38,7 +38,7 @@ impl Default for CompileWindow {
 pub fn build_viewport(
     ctx: &Context, 
     class: ViewportClass, 
-    app: &mut HammerTimeGui
+    app: &mut VmFlowApp
 ) {
     assert!(
         class == ViewportClass::Immediate,

@@ -1,4 +1,4 @@
-use crate::app::HammerTimeGui as App;
+use crate::app::VmFlowApp as App;
 use eframe::egui::{self};
 use rfd::FileDialog;
 

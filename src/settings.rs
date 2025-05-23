@@ -64,20 +64,6 @@ impl SelectedCompiler {
             .unwrap_or("unknown")
     }
     
-    // /// Add a parameter by name
-    // pub fn add_parameter_by_name(&mut self, param_name: &str) -> Option<usize> {
-    //     compilers::find_parameter_idx(self.compiler_idx, param_name).map(|param_idx| {
-    //         let override_idx = self.parameters.len();
-    //         self.parameters.push(ParameterOverride {
-    //             compiler_idx: self.compiler_idx,
-    //             parameter_idx: param_idx,
-    //             value: None,
-    //             activated: true,
-    //         });
-    //         override_idx
-    //     })
-    // }
-    
     /// Add a parameter by index
     pub fn add_parameter(&mut self, param_idx: usize) -> usize {
         let override_idx = self.parameters.len();

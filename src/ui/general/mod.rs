@@ -1,4 +1,4 @@
-use crate::app::HammerTimeGui;
+use crate::app::VmFlowApp;
 use eframe::egui::{
     self, Align, Ui,
 };
@@ -9,7 +9,7 @@ use super::utils::UiExt;
 mod buttons_panel;
 mod render_apps_grid;
 
-pub fn show(ui: &mut Ui, app: &mut HammerTimeGui) {
+pub fn show(ui: &mut Ui, app: &mut VmFlowApp) {
     #[cfg(debug_assertions)]
     {
         let cb = ui.checkbox_with_size(&mut app.debug_hover, "Enable Debug", 8.0);

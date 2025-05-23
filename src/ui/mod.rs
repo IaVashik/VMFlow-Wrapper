@@ -2,7 +2,7 @@ use eframe::egui::{
     CentralPanel, Context, ViewportBuilder, ViewportClass, ViewportId,
 };
 
-use crate::app::HammerTimeGui as App;
+use crate::app::VmFlowApp as App;
 
 pub mod themes;
 pub mod utils;

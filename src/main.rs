@@ -6,13 +6,13 @@ mod compilers;
 mod ui;
 mod backend;
 
-use app::HammerTimeGui;
+use app::VmFlowApp;
 use eframe::{self, egui};
 
 const WIN_SIZE_X: f32 = if cfg!(target_os = "linux") {
-    270.0
+    330.0
 } else {
-    410.0
+    470.0
 };
 const WIN_SIZE_Y: f32 = if cfg!(target_os = "linux") {
     380.0
@@ -56,7 +56,7 @@ fn main() {
     eframe::run_native(
         "VMFlow Wrapper",
         options,
-        Box::new(|_cc| Ok(Box::new(HammerTimeGui::new()))),
+        Box::new(|_cc| Ok(Box::new(VmFlowApp::new()))),
     )
     .expect("Failed to run GUI app");
 }
