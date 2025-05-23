@@ -1,6 +1,6 @@
 use std::sync::{atomic::AtomicBool, Arc};
 
-use eframe::egui::{self, CentralPanel, Context, Ui, ViewportClass};
+use eframe::egui::{self, CentralPanel, Color32, Context, RichText, Ui, ViewportClass};
 
 use crate::{app::VmFlowApp, ui::utils::UiExt};
 
@@ -11,7 +11,7 @@ pub struct CompileWindow {
     pub start_time: std::time::Instant,
     pub current_map: usize,
     pub current_step: String,
-    pub logs: String,
+    pub logs: Vec<RichText>,
     pub errors: String,
     // pub warnings: CompileError,
     
@@ -58,7 +58,7 @@ pub fn build_viewport(
             .default_width(SIDE_PANEL_WIDTH)
             .resizable(false)
             .show(ctx, |ui| {
-                if !window_state.is_finished {
+                if !window_state.is_finished && app.maps.len() > window_state.current_map {
                         // Current file
                         ui.horizontal(|ui| {
                             let file = &app.maps[window_state.current_map].name; // fuck me
@@ -67,8 +67,8 @@ pub fn build_viewport(
                             // Current compiler
                             ui.label_with_size(&window_state.current_step, 10.);
                         });
-                    }
-                    ui.add_space(10.);
+                }
+                ui.add_space(10.);
 
                     // Progress (TODO)
                     draw_progress_frame(ui);
@@ -95,14 +95,14 @@ pub fn build_viewport(
 
             match msg {
                 crate::backend::ProcessingMessage::SetCurrentStepName(name) => {
-                    window_state.logs.push_str(&name);
+                    window_state.logs.push(RichText::new(&name));
                     window_state.current_step = name;
                 },
-                crate::backend::ProcessingMessage::LogInfo(log) => window_state.logs.push_str(&log),
-                crate::backend::ProcessingMessage::LogSuccess(log) => window_state.logs.push_str(&log),
-                crate::backend::ProcessingMessage::LogWarning(log) => window_state.logs.push_str(&log),
-                crate::backend::ProcessingMessage::LogError(log) => window_state.logs.push_str(&log),
-                crate::backend::ProcessingMessage::StepFinished => window_state.logs.push_str("Finished!"),
+                crate::backend::ProcessingMessage::LogInfo(log) => window_state.logs.push(RichText::new(log)),
+                crate::backend::ProcessingMessage::LogSuccess(log) => window_state.logs.push(RichText::new(log)),
+                crate::backend::ProcessingMessage::LogWarning(log) => window_state.logs.push(RichText::new(log).color(Color32::YELLOW)),
+                crate::backend::ProcessingMessage::LogError(log) => window_state.logs.push(RichText::new(log).color(Color32::RED)),
+                crate::backend::ProcessingMessage::StepFinished => window_state.logs.push(RichText::new("Finished!").color(Color32::GREEN)),
                 crate::backend::ProcessingMessage::AllStepsFinished => window_state.is_finished = true,
                 crate::backend::ProcessingMessage::CompilationFinished => window_state.current_map += 1,
                 // crate::backend::ProcessingMessage::CompilationFailed(backend_error) => {
@@ -113,7 +113,6 @@ pub fn build_viewport(
                 // },
                 _ => {}
             }
-            window_state.logs.push('\n');
         }
     }
 
@@ -128,7 +127,7 @@ pub fn build_viewport(
     }
 }
 
-fn draw_logs(ui: &mut Ui, logs: &str) {
+fn draw_logs(ui: &mut Ui, logs: &Vec<RichText>) {
     egui::Frame::dark_canvas(ui.style())
         .stroke(egui::Stroke::new(1.0, egui::Color32::GRAY))
         .show(ui, |ui| {
@@ -136,7 +135,9 @@ fn draw_logs(ui: &mut Ui, logs: &str) {
             ui.set_width(ui.available_width() - SIDE_PANEL_WIDTH);
 
             egui::ScrollArea::vertical().stick_to_bottom(true).show(ui, |ui| {
-                ui.label_with_size(logs, 10.);
+                for text in logs.iter().cloned() { // todo: can we just do not use this fking clone?
+                    ui.label(text.size(10.)); 
+                }
             });
         });
 }
