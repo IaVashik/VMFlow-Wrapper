@@ -49,6 +49,8 @@ impl VmFlowApp {
     }
 
     pub fn start_compile(&mut self) {
+        self.save_config();
+        
         let (tx, rx) = sync::mpsc::channel();
         let cancel_flag = sync::Arc::new(sync::atomic::AtomicBool::new(false));
         self.backend_rx = Some(rx);

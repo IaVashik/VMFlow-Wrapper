@@ -8,6 +8,8 @@ use std::sync::{
 use std::thread;
 use std::time::Duration;
 
+mod builtin_commands;
+use builtin_commands::process_built_in;
 use crate::settings::{GameConfiguration, Preset, VmfMap};
 
 #[derive(Debug)]
@@ -41,9 +43,15 @@ pub enum BackendError {
 }
 
 
+#[derive(Debug)]
+struct PlaceholderContext {
+
+}
+
+
 pub fn start_compilation_thread(tx: Sender<ProcessingMessage>, preset: Preset, game_config: GameConfiguration, maps: Vec<VmfMap>, is_cancelled: Arc<AtomicBool>) {
     thread::spawn(move || {
-        //
+        // let PlaceholderContext ? // todo
         for map in &maps {
             let result = run_compilation(&preset, &game_config, map, tx.clone(), &is_cancelled);
     
@@ -89,7 +97,7 @@ fn run_compilation(preset: &Preset,
             return Err(BackendError::CommandNotFound(format!("Path for {step_name} not installed")));
         } 
 
-        let mut command_args = compiler_step.get_command_params();
+        let mut command_args = compiler_step.get_command_params(); // todo process placeholders!1
 
         #[cfg(unix)]
         if executable.ends_with(".exe") {
@@ -221,14 +229,5 @@ fn is_should_canceled(is_cancelled: &Arc<AtomicBool>, tx: &Sender<ProcessingMess
     Ok(())
 }
 
-fn process_built_in(step_name: &str, tx: &Sender<ProcessingMessage>) {
-    match step_name {
-        "COPY" => {eprintln!("Built-in func not implemented: COPY.")},
-        "SHUTDOWN" => {eprintln!("Built-in func not implemented: SHUTDOWN.")},
-        _ => {
-            tx.send(ProcessingMessage::LogWarning(format!("Unknown built-in step: {}", step_name))).ok();
-        }
-    }
-}
 
 // fn resolve_placeholders(strint: &mut String) {}

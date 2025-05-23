@@ -99,7 +99,7 @@ impl SelectedCompiler {
             .filter_map(|p| p.get_command_parts()) // Option<impl Iterator<Item = String>> -> impl Iterator<Item = String>
             .flatten();
 
-            params_iter.chain(base_args_iter).collect()
+        params_iter.chain(base_args_iter).collect()
     }
 
     // rename me
