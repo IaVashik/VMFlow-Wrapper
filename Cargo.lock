@@ -3,27 +3,6 @@
 version = 4
 
 [[package]]
-name = "VMFlow"
-version = "0.1.0"
-dependencies = [
- "catppuccin-egui",
- "compilers_types",
- "confy",
- "eframe",
- "egui_dnd",
- "egui_extras",
- "egui_flex",
- "fern",
- "include_dir",
- "log",
- "rfd",
- "serde",
- "toml",
- "walkdir",
- "winresource",
-]
-
-[[package]]
 name = "ab_glyph"
 version = "0.2.29"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -690,6 +669,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "compilation_core"
+version = "0.1.0"
+
+[[package]]
+name = "compiler_logs_process"
+version = "0.1.0"
+
+[[package]]
 name = "compilers_types"
 version = "0.1.0"
 dependencies = [
@@ -714,6 +701,10 @@ checksum = "4ca0197aee26d1ae37445ee532fefce43251d24cc7c166799f4d46817f1d3973"
 dependencies = [
  "crossbeam-utils",
 ]
+
+[[package]]
+name = "config_types"
+version = "0.1.0"
 
 [[package]]
 name = "confy"
@@ -1044,15 +1035,6 @@ dependencies = [
  "log",
  "mime_guess2",
  "profiling",
-]
-
-[[package]]
-name = "egui_flex"
-version = "0.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0d2598b8bd01a7bfdaede32b297e5ba671640d4220f6c353025042a82cefee6e"
-dependencies = [
- "egui",
 ]
 
 [[package]]
@@ -2027,6 +2009,10 @@ checksum = "ee6cda3051665f1fb8d9e08fc35c96d5a244fb1be711a03b71118828afc9a873"
 dependencies = [
  "jni-sys",
 ]
+
+[[package]]
+name = "networking_core"
+version = "0.1.0"
 
 [[package]]
 name = "nix"
@@ -3238,6 +3224,30 @@ name = "version_check"
 version = "0.9.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0b928f33d975fc6ad9f86c8f283853ad26bdd5b10b7f1542aa2fa15e2289105a"
+
+[[package]]
+name = "vmflow"
+version = "0.1.0"
+dependencies = [
+ "catppuccin-egui",
+ "compilation_core",
+ "compiler_logs_process",
+ "compilers_types",
+ "config_types",
+ "confy",
+ "eframe",
+ "egui_dnd",
+ "egui_extras",
+ "fern",
+ "include_dir",
+ "log",
+ "networking_core",
+ "rfd",
+ "serde",
+ "toml",
+ "walkdir",
+ "winresource",
+]
 
 [[package]]
 name = "walkdir"

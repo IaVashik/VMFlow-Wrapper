@@ -14,19 +14,19 @@ VMFlow/
     │   ├── Cargo.toml
     │   └── src/lib.rs
     │
-    ├── vmflow_config/      # Handles loading, managing, and saving application settings (library crate)
+    ├── config_types/      # Handles loading, managing, and saving application settings (library crate)
     │   ├── Cargo.toml      # (presets, game configs, user preferences)
     │   └── src/lib.rs
     │
-    ├── vmflow_compilation_core/ # Core logic for local compilation (library crate)
+    ├── compilation_core/ # Core logic for local compilation (library crate)
     │   ├── Cargo.toml      # (command generation, process execution, output parsing)
     │   └── src/lib.rs
     │
-    ├── logs_process_unit/     # Centralized logging utilities (library crate)
+    ├── compiler_logs_process/     # Centralized logging utilities (library crate)
     │   ├── Cargo.toml    
     │   └── src/lib.rs      
     │
-    └── vmflow_networking/  # (Future) Client-side logic for remote compilation (library crate)
+    └── networking_core/  # (Future) Client-side logic for remote compilation (library crate)
         ├── Cargo.toml
         └── src/lib.rs
 ```
