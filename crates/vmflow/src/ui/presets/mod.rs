@@ -1,6 +1,6 @@
 use eframe::egui::{self, CentralPanel, Context, Margin, ViewportClass};
 
-use crate::{settings::Settings, ui::utils::UiExt};
+use crate::{settings::AppSettings, ui::utils::UiExt};
 
 mod viewports;
 
@@ -37,7 +37,7 @@ pub struct PresetEditorWindow {
 pub fn build_viewport(
     ctx: &Context,
     class: ViewportClass,
-    settings: &mut Settings,
+    settings: &mut AppSettings,
     window_state: &mut PresetEditorWindow,
 ) {
     assert!(
@@ -79,7 +79,7 @@ pub fn build_viewport(
 /// Draws the main preset editor UI, including the top and bottom sections.
 fn draw_preset_editor(
     ui: &mut egui::Ui,
-    settings: &mut Settings,
+    settings: &mut AppSettings,
     window_state: &mut PresetEditorWindow,
 ) {
     // --------------------------

@@ -3,10 +3,11 @@ resolver = "2"
 members = [
     "crates/vmflow", 
     "crates/compilation_core", 
-    "crates/compilers_types", 
-    "crates/config_types", 
+    "crates/compiler_data_model", 
+    "crates/vmflow_config_types", 
     "crates/compiler_logs_process", 
-    "crates/networking_core"
+    "crates/networking_core", 
+    "crates/compilers_service",
 ]
 default-members = ["crates/vmflow"]
 
@@ -20,10 +21,13 @@ version = "0.1.0"
 # Workspace member crates
 #
 compilation_core = { path = "crates/compilation_core" }
-compilers_types = { path = "crates/compilers_types" }
-config_types = { path = "crates/config_types" }
+compiler_data_model = { path = "crates/compiler_data_model" }
+compilers_service = { path = "crates/compilers_service" }
+vmflow_config_types = { path = "crates/vmflow_config_types" }
 compiler_logs_process = { path = "crates/compiler_logs_process" }
 networking_core = { path = "crates/networking_core" }
+
+serde = { version = "1.0.219", features = ["derive"] }
 
 [workspace.lints.rust] # For exploratory dev only.
 unused = { level = "allow", priority = -1 } 

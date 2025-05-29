@@ -1,6 +1,6 @@
 [package]
-name = "compilers_types"
-version = "0.1.0"
+name = "compiler_data_model"
+version.workspace = true
 edition.workspace = true
 publish.workspace = true
 

@@ -1,5 +1,5 @@
 use eframe::egui;
-use crate::settings::Settings;
+use crate::settings::AppSettings;
 use crate::ui::themes::Themes;
 
 /// Builds the theme selector combo box.
@@ -10,7 +10,7 @@ use crate::ui::themes::Themes;
 ///
 /// * `ui` - The mutable reference to the egui UI.
 /// * `settings` - The mutable reference to the application settings.
-pub fn build_theme_selector(ui: &mut egui::Ui, settings: &mut Settings) {
+pub fn build_theme_selector(ui: &mut egui::Ui, settings: &mut AppSettings) {
     let theme: &mut Themes = &mut settings.theme;
     #[rustfmt::skip]
     egui::ComboBox::from_id_salt("Theme")

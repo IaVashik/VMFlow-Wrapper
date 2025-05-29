@@ -1,13 +1,13 @@
 use eframe::egui::Context;
 
-use crate::settings::Settings;
+use crate::settings::AppSettings;
 use crate::ui::show_viewport_immediate;
 
 mod create_new_preset;
 mod process_chooser;
 mod parameter_chooser;
 
-pub fn show_popup_windows(ctx: &Context, settings: &mut Settings, window_state: &mut super::PresetEditorWindow) -> bool {
+pub fn show_popup_windows(ctx: &Context, settings: &mut AppSettings, window_state: &mut super::PresetEditorWindow) -> bool {
     // Open the TODO.
     if window_state.is_create_new_open {
         show_viewport_immediate(

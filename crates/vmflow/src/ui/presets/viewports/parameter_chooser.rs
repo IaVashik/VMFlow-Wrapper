@@ -1,6 +1,6 @@
 use eframe::egui::{self, CentralPanel, Context};
 use egui_extras::Column;
-use crate::settings::Settings;
+use crate::settings::AppSettings;
 use crate::ui::{
     utils::UiExt,
     constants::font,
@@ -23,7 +23,7 @@ use crate::ui::{
 ///
 /// `true` if the viewport should close (parameter was selected or close requested),
 /// `false` otherwise
-pub fn build(ctx: &Context, settings: &mut Settings, app_idx: usize, selected_row: &mut usize) -> bool {
+pub fn build(ctx: &Context, settings: &mut AppSettings, app_idx: usize, selected_row: &mut usize) -> bool {
     let mut param_selected = false; 
 
     CentralPanel::default().show(ctx, |ui| {
@@ -57,8 +57,8 @@ pub fn build(ctx: &Context, settings: &mut Settings, app_idx: usize, selected_ro
 /// * `param_selected` - Will be set to true if a parameter is selected
 fn build_parameters_table(
     ui: &mut egui::Ui, 
-    parms: &[compilers_types::Parameter],
-    settings: &mut Settings,
+    parms: &[compiler_data_model::Parameter],
+    settings: &mut AppSettings,
     app_idx: usize,
     selected_row: &mut usize,
     param_selected: &mut bool
@@ -107,7 +107,7 @@ fn handle_row_click(
     idx: usize,
     selected_row: &mut usize,
     param_selected: &mut bool,
-    settings: &mut Settings,
+    settings: &mut AppSettings,
     app_idx: usize
 ) {
     if response.clicked() {

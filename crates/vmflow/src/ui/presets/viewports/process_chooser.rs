@@ -1,10 +1,9 @@
 use eframe::egui::{self, CentralPanel, Context};
 use egui_extras::{Column, TableBuilder};
-use crate::compilers;
-use crate::settings::Settings;
+use crate::settings::AppSettings;
 use crate::ui::utils::UiExt;
 
-pub fn build(ctx: &Context, settings: &mut Settings, selected_row: &mut usize) -> bool {
+pub fn build(ctx: &Context, settings: &mut AppSettings, selected_row: &mut usize) -> bool {
     let mut process_selected = false; 
 
     CentralPanel::default().show(ctx, |ui| {
@@ -20,7 +19,7 @@ pub fn build(ctx: &Context, settings: &mut Settings, selected_row: &mut usize) -
                 header.col(|ui| { ui.strong("Description"); });
             })
             .body(|mut body| {
-                for (idx, app) in compilers::COMPILERS.iter().enumerate() {
+                for (idx, app) in compilers_service::iter_configs().enumerate() {
                     body.row(30.0, |mut row| {
                         row.set_selected(*selected_row == idx);
                         row.col(|ui| { ui.centered_label_with_size(&app.name, 10.); });

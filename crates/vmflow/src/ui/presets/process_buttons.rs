@@ -1,5 +1,5 @@
 use eframe::egui;
-use crate::settings::Settings;
+use crate::settings::AppSettings;
 use super::PresetEditorWindow;
 use crate::ui::utils::UiExt;
 
@@ -13,7 +13,7 @@ pub fn add_process_button(ui: &mut egui::Ui, window_state: &mut PresetEditorWind
     }
 }
 
-pub fn remove_process_button(ui: &mut egui::Ui, settings: &mut Settings, window_state: &mut PresetEditorWindow) {
+pub fn remove_process_button(ui: &mut egui::Ui, settings: &mut AppSettings, window_state: &mut PresetEditorWindow) {
     if ui.button_with_dimensions("-", [SHORT_BUTTON_WIDTH, 18.]).clicked() {
         let preset = settings.current_preset_mut().unwrap(); // SAFETY: the button will be inactive if there is no preset
 
@@ -30,7 +30,7 @@ pub fn add_parameter_button(ui: &mut egui::Ui, window_state: &mut PresetEditorWi
     }
 }
 
-pub fn remove_parameter_button(ui: &mut egui::Ui, _settings: &mut Settings, _window_state: &mut PresetEditorWindow) {
+pub fn remove_parameter_button(ui: &mut egui::Ui, _settings: &mut AppSettings, _window_state: &mut PresetEditorWindow) {
     // TODO: Implement parameter removal
     if ui.button_with_dimensions("Remove",  [BUTTON_WIDTH, 18.]).clicked() {
         println!("Remove parameter - not implemented")

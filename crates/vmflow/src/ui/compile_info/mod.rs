@@ -93,24 +93,20 @@ pub fn build_viewport(
         for msg in rx.try_iter() {
             println!("{msg:?}");
 
+            use compilation_core::ProcessingMessage;
             match msg {
-                crate::backend::ProcessingMessage::SetCurrentStepName(name) => {
+                ProcessingMessage::SetCurrentStepName(name) => {
                     window_state.logs.push(RichText::new(&name));
                     window_state.current_step = name;
                 },
-                crate::backend::ProcessingMessage::LogInfo(log) => window_state.logs.push(RichText::new(log)),
-                crate::backend::ProcessingMessage::LogSuccess(log) => window_state.logs.push(RichText::new(log)),
-                crate::backend::ProcessingMessage::LogWarning(log) => window_state.logs.push(RichText::new(log).color(Color32::YELLOW)),
-                crate::backend::ProcessingMessage::LogError(log) => window_state.logs.push(RichText::new(log).color(Color32::RED)),
-                crate::backend::ProcessingMessage::StepFinished => window_state.logs.push(RichText::new("Finished!").color(Color32::GREEN)),
-                crate::backend::ProcessingMessage::AllStepsFinished => window_state.is_finished = true,
-                crate::backend::ProcessingMessage::CompilationFinished => window_state.current_map += 1,
-                // crate::backend::ProcessingMessage::CompilationFailed(backend_error) => {
-                //     match backend_error {
-                //         crate::backend::BackendError::Cancelled => should_canceled = true,
-                //         _ => {}
-                //     }
-                // },
+                ProcessingMessage::LogInfo(log) => window_state.logs.push(RichText::new(log)),
+                ProcessingMessage::LogSuccess(log) => window_state.logs.push(RichText::new(log)),
+                ProcessingMessage::LogWarning(log) => window_state.logs.push(RichText::new(log).color(Color32::YELLOW)),
+                ProcessingMessage::LogError(log) => window_state.logs.push(RichText::new(log).color(Color32::RED)),
+                ProcessingMessage::StepFinished => window_state.logs.push(RichText::new("Finished!").color(Color32::GREEN)),
+                ProcessingMessage::CompilationFinished => window_state.current_map += 1,
+                ProcessingMessage::AllStepsFinished => window_state.is_finished = true,
+                ProcessingMessage::CompilationFailed(backend_error) => should_canceled = true,
                 _ => {}
             }
         }

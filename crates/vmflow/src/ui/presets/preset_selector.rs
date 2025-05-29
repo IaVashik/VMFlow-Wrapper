@@ -1,8 +1,10 @@
+use vmflow_config_types::preset::Preset;
 use eframe::egui;
 
-use crate::{settings::{Preset, Settings}, ui::utils::UiExt};
+use crate::settings::AppSettings;
+use crate::ui::utils::UiExt;
 
-pub fn build(ui: &mut egui::Ui, settings: &mut Settings, window_state: &mut super::PresetEditorWindow) {
+pub fn build(ui: &mut egui::Ui, settings: &mut AppSettings, window_state: &mut super::PresetEditorWindow) {
     let spacing = ui.spacing().item_spacing.x;
     let button_width = 55.;
     

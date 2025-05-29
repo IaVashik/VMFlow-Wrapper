@@ -1,15 +1,11 @@
-use compilers_types::ParameterType;
+use compiler_data_model::ParameterType;
+use vmflow_config_types::selected_compiler::SelectedCompiler;
 use eframe::egui;
 use egui_extras::{Column, TableBody};
 
-use crate::{
-    settings::{SelectedCompiler, Settings}, 
-    ui::{
-        utils::UiExt,
-        constants::font,
-        constants::table
-    }
-};
+use crate::settings::AppSettings;
+use crate::ui::utils::UiExt;
+use crate::ui::constants::{font, table};
 
 /// Creates a table to display and edit parameters for the selected application.
 ///
@@ -22,7 +18,7 @@ use crate::{
 /// # Returns
 ///
 /// Some(()) if successful, None if no preset or app is available
-pub fn build(ui: &mut egui::Ui, settings: &mut Settings, selected_app: usize) -> Option<()> {
+pub fn build(ui: &mut egui::Ui, settings: &mut AppSettings, selected_app: usize) -> Option<()> {
     let preset = settings.current_preset_mut()?;
     let app = preset.apps.get_mut(selected_app)?;
     

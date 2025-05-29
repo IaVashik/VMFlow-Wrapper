@@ -1,5 +1,5 @@
 use eframe::egui::{self, CentralPanel, Context};
-use crate::settings::{GameConfiguration, Settings};
+use crate::settings::AppSettings;
 use crate::ui::utils::UiExt;
 
 /// Builds the game configuration editor viewport.
@@ -11,7 +11,7 @@ use crate::ui::utils::UiExt;
 /// * `ctx` - The egui context.
 /// * `settings` - The mutable reference to the application settings.
 /// * `window_state` - The mutable state of the settings window.
-pub fn build_config_editor(ctx: &Context, settings: &mut Settings, window_state: &mut super::SettingsWindow) {
+pub fn build_config_editor(ctx: &Context, settings: &mut AppSettings, window_state: &mut super::SettingsWindow) {
     CentralPanel::default().show(ctx, |ui| {
         ui.label_with_size("Configurations:", 10.0);
 
@@ -39,7 +39,7 @@ pub fn build_config_editor(ctx: &Context, settings: &mut Settings, window_state:
 
             ui.vertical(|ui| {
                 if ui.button_with_dimensions("Add", [60., 18.]).clicked() {
-                    settings.games.push(GameConfiguration::default());
+                    settings.games.push(vmflow_config_types::GameConfiguration::default());
                     window_state.editor_selected_game = settings.games.len() - 1;
                     window_state.editor_renaming = true;
                 }

@@ -671,16 +671,28 @@ dependencies = [
 [[package]]
 name = "compilation_core"
 version = "0.1.0"
+dependencies = [
+ "vmflow_config_types",
+]
+
+[[package]]
+name = "compiler_data_model"
+version = "0.1.0"
+dependencies = [
+ "serde",
+]
 
 [[package]]
 name = "compiler_logs_process"
 version = "0.1.0"
 
 [[package]]
-name = "compilers_types"
+name = "compilers_service"
 version = "0.1.0"
 dependencies = [
- "serde",
+ "compiler_data_model",
+ "include_dir",
+ "toml",
 ]
 
 [[package]]
@@ -701,10 +713,6 @@ checksum = "4ca0197aee26d1ae37445ee532fefce43251d24cc7c166799f4d46817f1d3973"
 dependencies = [
  "crossbeam-utils",
 ]
-
-[[package]]
-name = "config_types"
-version = "0.1.0"
 
 [[package]]
 name = "confy"
@@ -3231,22 +3239,29 @@ version = "0.1.0"
 dependencies = [
  "catppuccin-egui",
  "compilation_core",
+ "compiler_data_model",
  "compiler_logs_process",
- "compilers_types",
- "config_types",
+ "compilers_service",
  "confy",
  "eframe",
  "egui_dnd",
  "egui_extras",
  "fern",
- "include_dir",
  "log",
  "networking_core",
  "rfd",
  "serde",
- "toml",
+ "vmflow_config_types",
  "walkdir",
- "winresource",
+]
+
+[[package]]
+name = "vmflow_config_types"
+version = "0.1.0"
+dependencies = [
+ "compiler_data_model",
+ "compilers_service",
+ "serde",
 ]
 
 [[package]]
@@ -3969,16 +3984,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0e7f4ea97f6f78012141bcdb6a216b2609f0979ada50b20ca5b52dde2eac2bb1"
 dependencies = [
  "memchr",
-]
-
-[[package]]
-name = "winresource"
-version = "0.1.20"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ba4a67c78ee5782c0c1cb41bebc7e12c6e79644daa1650ebbc1de5d5b08593f7"
-dependencies = [
- "toml",
- "version_check",
 ]
 
 [[package]]

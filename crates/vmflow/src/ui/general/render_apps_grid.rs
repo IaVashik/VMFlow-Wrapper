@@ -1,9 +1,9 @@
 use eframe::egui::{vec2, Color32, RichText, Ui};
 use egui_extras::{Size, StripBuilder};
 
-use crate::{settings::Preset, ui::utils::UiExt};
+use crate::ui::utils::UiExt;
 
-pub fn build(ui: &mut Ui, preset: &mut Preset) {
+pub fn build(ui: &mut Ui, preset: &mut vmflow_config_types::preset::Preset) {
     if preset.apps.is_empty() {
         return;
     }
@@ -30,7 +30,7 @@ pub fn build(ui: &mut Ui, preset: &mut Preset) {
                     });
             });
 
-            // Second row: launch arguments
+            // Second row: launch arguments (// todo this is so ugly, fix!)
             strip.cell(|ui| {
                 // Create a horizontal strip for app parameters with columns based on number of apps
                 StripBuilder::new(ui)
@@ -42,7 +42,10 @@ pub fn build(ui: &mut Ui, preset: &mut Preset) {
                                 ui.vertical(|ui| {
                                     ui.checkbox_with_size(&mut app.activated, "Enabled", 6.0);
                                     let params_text = app.parameters.iter()
-                                        .filter_map(|param_override| param_override.to_command_arg())
+                                        .filter_map(|param_override| { // param_override - это &ParameterOverride
+                                            param_override.get_command_parts()
+                                                .map(|parts_vec| parts_vec.join(" "))
+                                        })
                                         .collect::<Vec<String>>()
                                         .join("\n");
                                     let mut rich_text = RichText::new(params_text).size(8.);

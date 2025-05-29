@@ -10,11 +10,11 @@ VMFlow/
     │   ├── Cargo.toml
     │   └── src/            # Contains main.rs, app.rs, ui/ module, etc.
     │
-    ├── compilers_types/    # Core data types for compiler configs and parameters (library crate)
+    ├── compiler_data_model/    # Core data types for compiler configs and parameters (library crate)
     │   ├── Cargo.toml
     │   └── src/lib.rs
     │
-    ├── config_types/      # Handles loading, managing, and saving application settings (library crate)
+    ├── vmflow_config_types/      # Handles loading, managing, and saving application settings (library crate)
     │   ├── Cargo.toml      # (presets, game configs, user preferences)
     │   └── src/lib.rs
     │

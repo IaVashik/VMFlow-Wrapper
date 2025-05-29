@@ -1,5 +1,5 @@
 use eframe::egui::{CentralPanel, Context};
-use crate::settings::Settings;
+use crate::settings::AppSettings;
 use crate::ui::utils::UiExt;
 
 /// Builds the UI for editing a preset and handles saving.
@@ -12,7 +12,7 @@ use crate::ui::utils::UiExt;
 /// # Returns
 ///
 /// `true` if the window should close, `false` otherwise.
-pub fn build(ctx: &Context, settings: &mut Settings) -> bool {
+pub fn build(ctx: &Context, settings: &mut AppSettings) -> bool {
     let preset = settings.compile_presets.last_mut().expect("No preset to edit.");
 
     let item_spacing = ctx.style().spacing.item_spacing.x;

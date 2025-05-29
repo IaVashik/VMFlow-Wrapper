@@ -22,7 +22,7 @@ pub fn show(ui: &mut Ui, app: &mut VmFlowApp) {
         ui.with_layout(Layout::left_to_right(Align::Min), |ui| {
             ui.label_with_size("VMFlow", 12.0); // formerly: CropFactor Team Compile Tool (CTCT++)
             ui.add_space(ui.available_width() - 50.0);
-            if ui.button_with_size("Settings", 10.0).clicked() {
+            if ui.button_with_size("AppSettings", 10.0).clicked() {
                 app.settings_window.is_open = true;
             }
         });

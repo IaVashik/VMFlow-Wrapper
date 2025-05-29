@@ -1,6 +1,6 @@
 [package]
 name = "compilation_core"
-version = "0.1.0"
+version.workspace = true
 edition.workspace = true
 publish.workspace = true
 
@@ -8,3 +8,4 @@ publish.workspace = true
 workspace = true
 
 [dependencies]
+vmflow_config_types.workspace = true

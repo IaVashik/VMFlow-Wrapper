@@ -1,10 +1,10 @@
 use eframe::egui;
-use crate::settings::Settings;
+use crate::settings::AppSettings;
 use super::PresetEditorWindow;
 
 pub fn draw(
     ui: &mut egui::Ui,
-    settings: &mut Settings,
+    settings: &mut AppSettings,
     window_state: &mut PresetEditorWindow,
 ) {
     let preset = match settings.current_preset_mut() {

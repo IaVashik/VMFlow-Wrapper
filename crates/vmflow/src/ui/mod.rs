@@ -43,7 +43,7 @@ pub fn build_ui(ctx: &Context, app: &mut App) {
     // Process additional/immediate windows
     let mut is_any_immediate_open = false;
     if app.settings_window.is_open {
-        show_viewport_immediate(ctx, "Settings", [270.0, 235.0], |ctx, class| {
+        show_viewport_immediate(ctx, "AppSettings", [270.0, 235.0], |ctx, class| {
             settings::build_viewport(ctx, class, &mut app.settings, &mut app.settings_window)
         });
         is_any_immediate_open = true;

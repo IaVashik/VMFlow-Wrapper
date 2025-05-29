@@ -2,9 +2,7 @@
 
 mod app;
 mod settings;
-mod compilers;
 mod ui;
-mod backend;
 
 use app::VmFlowApp;
 use eframe::{self, egui};
@@ -43,7 +41,6 @@ fn main() {
     // Checks for wine
     #[cfg(unix)]
     if !is_wine_installed() {
-        eprintln!("Wine is not installed. To compile Source Engine maps on Unix-like systems, you need Wine!");
         rfd::MessageDialog::new()
         .set_title("Wine is not installed")
             .set_description("To compile Source Engine maps on Unix-like systems, you need Wine!")
@@ -57,8 +54,7 @@ fn main() {
         "VMFlow Wrapper",
         options,
         Box::new(|_cc| Ok(Box::new(VmFlowApp::new()))),
-    )
-    .expect("Failed to run GUI app");
+    ).expect("Failed to run GUI app");
 }
 
 #[cfg(unix)]

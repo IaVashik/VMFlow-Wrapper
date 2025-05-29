@@ -7,7 +7,7 @@ use eframe::egui::{self, CentralPanel, Context, RichText, ViewportClass};
 use rfd::FileDialog;
 
 use crate::{
-    settings::Settings,
+    settings::AppSettings,
     ui::utils::UiExt,
 };
 
@@ -36,7 +36,7 @@ pub struct SettingsWindow {
 pub fn build_viewport(
     ctx: &Context,
     class: ViewportClass,
-    settings: &mut Settings,
+    settings: &mut AppSettings,
     window_state: &mut SettingsWindow,
 ) {
     assert!(
@@ -123,10 +123,10 @@ pub fn build_viewport(
         ui.add_space(10.);
         let reset_button = ui.add_sized(
             [ui.available_width(), 10.], 
-            egui::Button::new(RichText::new("Reset ALL Settings (Double Click)").size(10.))
+            egui::Button::new(RichText::new("Reset ALL AppSettings (Double Click)").size(10.))
         );
         if reset_button.double_clicked() {
-            *settings = Settings::default();
+            *settings = AppSettings::default();
             window_state.editor_renaming = false;
         }
     });

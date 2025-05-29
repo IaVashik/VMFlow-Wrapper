@@ -1,7 +1,8 @@
+use compilation_core::ProcessingMessage;
+use vmflow_config_types::VmfMap;
 use serde::{de, Deserialize, Serialize};
 
-use crate::settings::{VmfMap, Settings};
-use crate::backend::{self, ProcessingMessage};
+use crate::settings::AppSettings;
 use crate::ui;
 use std::path::{Path, PathBuf};
 use std::sync;
@@ -10,16 +11,11 @@ use std::sync::mpsc::Receiver;
 // Error scan and info about them
 // Automatic creation of particle manifests for optimization and correct operation of particles on the map
 // Automatic detection and packaging of additional files such as NAV, RADAR, Soundscapes, Detail VBSP, etc.
-
-#[derive(Default)]
-pub struct CompileError {
-    pub name: String,
-    pub text: String,
-}
+// !preservation of original compiler indexes, validation and correlation when changing
 
 #[derive(Default)]
 pub struct VmFlowApp {
-    pub settings: Settings,
+    pub settings: AppSettings,
     pub maps: Vec<VmfMap>,
 
     // additionals windows
@@ -34,6 +30,18 @@ pub struct VmFlowApp {
     pub debug_hover: bool,
 }
 
+impl eframe::App for VmFlowApp {
+    fn update(&mut self, ctx: &eframe::egui::Context, frame: &mut eframe::Frame) {
+        ui::build_ui(ctx, self);
+
+        if ctx.input(|i| i.viewport().close_requested()) {
+            self.save_config().expect("Data's will not saved.");
+        }
+
+        // self.poll_processing_events() // todo Does it make sense now?
+    }
+}
+
 impl VmFlowApp {
     pub fn new() -> Self {
         let settings = confy::load("VMFlow_wrapper", "config").unwrap_or_default();
@@ -44,7 +52,7 @@ impl VmFlowApp {
     }
 
     pub fn save_config(&self) -> Result<(), confy::ConfyError> {
-        println!("Saving data...");
+        println!("INFO: Saving data...");
         confy::store("VMFlow_wrapper", "config", &self.settings)
     }
 
@@ -59,11 +67,11 @@ impl VmFlowApp {
         self.compile_window.logs.clear();
         self.compile_window.start_time = std::time::Instant::now();
 
-        // TODO: remove cloning, now only for test
+        // TODO!: remove cloning, now only for test
         let preset = self.settings.current_preset().unwrap().clone();
         let game = self.settings.current_game().unwrap().clone();
         let maps = self.maps.clone();
-        backend::start_compilation_thread(tx, preset, game, maps, cancel_flag);
+        compilation_core::start_compilation_thread(tx, preset, game, maps, cancel_flag);
     }
 
     pub fn cancel_compile(&mut self) {
@@ -75,18 +83,6 @@ impl VmFlowApp {
         // clear backend receiver and cancel flag to reset compilation state.
         self.backend_rx = None; 
         self.backend_cancel_flag = None;
-    }
-}
-
-impl eframe::App for VmFlowApp {
-    fn update(&mut self, ctx: &eframe::egui::Context, frame: &mut eframe::Frame) {
-        ui::build_ui(ctx, self);
-
-        if ctx.input(|i| i.viewport().close_requested()) {
-            self.save_config().expect("Data's will not saved.");
-        }
-
-        // self.poll_processing_events()
     }
 }
 

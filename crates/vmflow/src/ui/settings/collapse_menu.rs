@@ -1,12 +1,11 @@
 use eframe::egui;
 use rfd::FileDialog;
-use crate::compilers;
-use crate::settings::GameConfiguration;
+use vmflow_config_types::GameConfiguration;
 use crate::ui::settings::dir_field;
 
 use super::SettingsWindow;
 
-/// Draws the "Advanced Compiler Settings" collapsible section.
+/// Draws the "Advanced Compiler AppSettings" collapsible section.
 ///
 /// This function handles the collapsible state, auto-scan button,
 /// and invokes `collapse_menu::draw_collapse_menu` for rendering
@@ -32,7 +31,7 @@ pub fn draw_advanced_settings(ui: &mut egui::Ui, game: &mut GameConfiguration, w
 
     state
         .show_header(ui, |ui| {
-            let response = ui.label("Advanced Compiler Settings");
+            let response = ui.label("Advanced Compiler AppSettings");
             if ui.button("Auto Scan").clicked() {
                 if !window_state.additional_collapsing_is_open {
                     window_state.additional_should_toggle = true;
@@ -70,7 +69,7 @@ fn draw_collapse_menu(ui: &mut egui::Ui, game: &mut GameConfiguration) {
         });
 
         // Set the path for custom compiler applications.
-        for (idx, compiler) in compilers::COMPILERS.iter().enumerate() {
+        for (idx, compiler) in compilers_service::iter_configs().enumerate() {
             if compiler.is_builtin {
                 continue
             }

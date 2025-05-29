@@ -1,6 +1,6 @@
 [package]
 name = "vmflow"
-version = "0.1.0"
+version.workspace = true
 edition.workspace = true
 publish.workspace = true
 
@@ -9,8 +9,9 @@ workspace = true
 
 [dependencies]
 compilation_core.workspace = true
-compilers_types.workspace = true
-config_types.workspace = true
+compiler_data_model.workspace = true
+vmflow_config_types.workspace = true
+compilers_service.workspace = true
 compiler_logs_process.workspace = true
 networking_core.workspace = true
 
@@ -19,17 +20,9 @@ egui_extras = "0.31.1"
 catppuccin-egui = { version = "5.5.0", default-features = false, features = ["egui31"] }
 rfd = "0.15.3"
 
-serde = { version = "1.0.219", features = ["derive"] }
+serde.workspace = true
 confy = "0.6.1"
 log = "0.4.26"
 fern = "0.7"
-include_dir = { version = "0.7.4", features = ["glob"] }
-toml = "0.8.20"
 egui_dnd = "=0.12.0"
 walkdir = "2.5.0"
-
-
-[build-dependencies]
-toml = "0.8.20"
-compilers_types.workspace = true
-winresource = "0.1.20"
