@@ -2,7 +2,7 @@ name = "GAME"
 is_builtin = false
 description = "Launch the game with your map."
 working_dir = "$binFolder"
-base_arguments = "-game $game +map $map"
+base_arguments = "-game $gameDir +map $map"
 
 [[parameters]]
 name = "Tools"

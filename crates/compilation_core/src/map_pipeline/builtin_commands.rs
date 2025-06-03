@@ -1,15 +1,15 @@
 use std::{io::Error, sync::mpsc::Sender};
-use super::ProcessingMessage;
+use crate::types::BackendError;
 
-
-pub fn process_built_in(step_name: &str, tx: &Sender<ProcessingMessage>) {
+pub async fn process(step_name: &str) -> Result<(), BackendError> {
     match step_name {
         "COPY" => {eprintln!("Built-in func not implemented: COPY.")},
         "SHUTDOWN" => {system_shutdown();},
         _ => {
-            tx.send(ProcessingMessage::LogWarning(format!("Unknown built-in step: {}", step_name))).ok();
+            return Err(BackendError::BuiltinFailed("Process Not Found".to_string())); // todo?
         }
     }
+    Ok(())
 }
 
 fn system_shutdown() -> Result<(), String> {

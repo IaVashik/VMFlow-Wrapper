@@ -5,12 +5,12 @@ pub mod selected_compiler;
 pub mod parameter_override;
 pub mod preset;
 
-#[derive(Default, Serialize, Deserialize, Clone, Hash)]
+#[derive(Default, Debug, Serialize, Deserialize, Clone, Hash)]
 pub struct VmfMap {
     pub name: String,
     pub path: PathBuf,
     pub activated: bool,
-    // order_idx: i32, // ?!
+    pub order_idx: usize,
 }
 
 #[derive(Serialize, Deserialize, Clone)]

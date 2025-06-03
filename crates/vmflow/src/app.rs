@@ -1,4 +1,3 @@
-use compilation_core::ProcessingMessage;
 use vmflow_config_types::VmfMap;
 use serde::{de, Deserialize, Serialize};
 
@@ -17,14 +16,13 @@ use std::sync::mpsc::Receiver;
 pub struct VmFlowApp {
     pub settings: AppSettings,
     pub maps: Vec<VmfMap>,
+    pub compile_session: Option<compilation_core::CompilationSession>,
 
     // additionals windows
     pub settings_window: ui::settings::SettingsWindow,
     pub presets_window: ui::presets::PresetEditorWindow,
     pub compile_window: ui::compile_info::CompileWindow,
 
-    pub backend_rx: Option<Receiver<ProcessingMessage>>,
-    pub backend_cancel_flag: Option<sync::Arc<sync::atomic::AtomicBool>>,
 
     #[cfg(debug_assertions)]
     pub debug_hover: bool,
@@ -58,11 +56,6 @@ impl VmFlowApp {
 
     pub fn start_compile(&mut self) {
         self.save_config();
-        
-        let (tx, rx) = sync::mpsc::channel();
-        let cancel_flag = sync::Arc::new(sync::atomic::AtomicBool::new(false));
-        self.backend_rx = Some(rx);
-        self.backend_cancel_flag = Some(cancel_flag.clone());
 
         self.compile_window.logs.clear();
         self.compile_window.start_time = std::time::Instant::now();
@@ -71,18 +64,20 @@ impl VmFlowApp {
         let preset = self.settings.current_preset().unwrap().clone();
         let game = self.settings.current_game().unwrap().clone();
         let maps = self.maps.clone();
-        compilation_core::start_compilation_thread(tx, preset, game, maps, cancel_flag);
+
+        // let (tx, rx) = sync::mpsc::channel();
+        let session = compilation_core::CompilationSession::new(preset, game, 1, None);
+        session.start_batch(maps);
+        self.compile_session = Some(session);
+        // compilation_core::start_compilation_thread(tx, preset, game, maps, cancel_flag);
     }
 
     pub fn cancel_compile(&mut self) {
-        if let Some(cancel_flag) = &self.backend_cancel_flag {
-            println!("Sending cancel signal to backend...");
-            cancel_flag.store(true, sync::atomic::Ordering::SeqCst);
+        if let Some(session) = &mut self.compile_session {
+            session.cancel_batch();
+            // self.compile_session = None;
         }
 
-        // clear backend receiver and cancel flag to reset compilation state.
-        self.backend_rx = None; 
-        self.backend_cancel_flag = None;
     }
 }
 
@@ -105,13 +100,13 @@ impl VmFlowApp {
                 return;
             }
 
-            let map = VmfMap { 
-                name: path.file_name().unwrap().to_string_lossy().to_string(), 
-                path: path.to_path_buf(), 
-                activated: true 
+            let map = VmfMap {
+                name: path.file_name().unwrap().to_string_lossy().to_string(),
+                path: path.to_path_buf(),
+                activated: true,
+                order_idx: self.maps.len(),
             };
             self.maps.push(map);
-            println!("PLACEHOLDER INFO: added {path:?}")
         }
     }
 

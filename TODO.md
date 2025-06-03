@@ -15,7 +15,7 @@
 2.  **Command Line Generation:**
     - [X] Refine `SelectedCompiler::to_command_args` / `parameters_string` (or create a new function) to generate the *full* command for execution:
         - [X] Include base arguments (`base_arguments` from TOML).
-        - [X] Correctly substitute paths and variables (`$game`, `$vmfFile`, `$map`, `$binFolder`, `$mapCopyLocation`, etc.) using data from the current `GameConfiguration` and the map being compiled.
+        - [X] Correctly substitute paths and variables (`$mapFile`, `$mapFile`, `$map`, `$binFolder`, `$mapCopyLocation`, etc.) using data from the current `GameConfiguration` and the map being compiled.
         - [X] Consider the custom compiler path (`custom_apps_paths`) if specified in `GameConfiguration`.
     *   Ensure paths are passed correctly, especially across different OS.
 
@@ -23,7 +23,7 @@
     - [ ] Implement display of the map list (`app.maps`) in the main window (replacing `TODO TEXT`). Should display filename, path (possibly shortened), and a checkbox for activation/deactivation.
     - [ ] Implement functionality for "Add" and "Clear" buttons to add (via `rfd` dialog) and clear the map list (`app.maps`).
     - [X] Implement drag-and-drop file handling (`handle_dropped_files`) for adding maps to the list.
-    - [ ] Ensure the path to the selected/active map (`$vmfFile`) is passed to the backend for compilation.
+    - [ ] Ensure the path to the selected/active map (`$mapFile`) is passed to the backend for compilation.
 
 4.  **Starting Compilation from UI:**
     - [X] Bind the "Begin Compile!" button to start the compilation process via the backend. Pass the selected preset and active map.
